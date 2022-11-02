@@ -1,17 +1,35 @@
-let playerHands = [
-    { name: 'The dealer', hand: [], sum() { return this.hand.reduce((p, c) => p + c) } },
-    { name: name, hand: [], sum() { return this.hand.reduce((p, c) => p + c) }, bank: 1000 },
+
+const cardPossibilities = [
+    { cardName: 'A', cardValue: 1, cardAltValue: 11 },
+    { cardName: '2', cardValue: 2 },
+    { cardName: '3', cardValue: 3 },
+    { cardName: '4', cardValue: 4 },
+    { cardName: '5', cardValue: 5 },
+    { cardName: '6', cardValue: 6 },
+    { cardName: '7', cardValue: 7 },
+    { cardName: '8', cardValue: 8 },
+    { cardName: '9', cardValue: 9 },
+    { cardName: '10', cardValue: 10 },
+    { cardName: 'J', cardValue: 10 },
+    { cardName: 'Q', cardValue: 10 },
+    { cardName: 'K', cardValue: 10 },
 ]
-let dealer = playerHands[0];
-let mainPlayer = playerHands[1];
-let betOptions = [5, 25, 50, 100, 500]
-let isGameActive = false;
 
 // Begin game
 console.log('Welcome to the Blackjack table')
 const prompt = require('prompt-sync')()
 let name = prompt('What is your name? ')
 name = name[0].toUpperCase() + name.slice(1).trim()
+
+let playerHands = [
+    { name: 'The dealer', hand: [], handValues: [], sum: [] },
+    { name: name, hand: [], handValues: [], sum:[], bank: 1000 },
+]
+
+let dealer = playerHands[0];
+let mainPlayer = playerHands[1];
+let betOptions = [5, 25, 50, 100, 500]
+let isGameActive = false;
 
 begin = prompt(`Welcome ${name}. Are you ready to start the game? Yes or No `)
 if (begin.trim().toLowerCase() == 'yes' || begin.trim().toLowerCase() == 'ya' || begin.trim().toLowerCase() == 'y') {
@@ -40,14 +58,14 @@ while (isGameActive) {
     // dealer.hand = [10, 11]
     // mainPlayer.hand = [5, 3]
     console.log(`The dealer's hand: ${hideDearlerCards(dealer.hand)}`)
-    console.log(`Your hand: ${mainPlayer.hand} -- Total: ${mainPlayer.sum()}`)
+    console.log(`Your hand: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
 
     //if mainplayer gets blackjack
-    if (mainPlayer.sum() === 21) {
+    if (mainPlayer.sum === 21) {
         console.log('Blackjack!')
-        console.log(`The dealer's hand revealed: ${dealer.hand}. Total: ${dealer.sum()} `)
+        console.log(`The dealer's hand revealed: ${dealer.hand}. Total: ${dealer.sum} `)
 
-        if (dealer.sum() !== 21) {
+        if (dealer.sum !== 21) {
             console.log('You win!')
             mainPlayer.bank += bet * 2.5
 
@@ -60,58 +78,58 @@ while (isGameActive) {
     }
 
     // if player doesn't get blackjack
-    else if (mainPlayer.sum() !== 21) {
+    else if (mainPlayer.sum !== 21) {
         // loop option to hit or stay until player chooses stay or busts
         let hitOrStay = ''
-        while (hitOrStay !== 'stay' && mainPlayer.sum() < 21) {
+        while (hitOrStay !== 'stay' && mainPlayer.sum < 21) {
             hitOrStay = prompt('Hit or Stay ')
             if (hitOrStay === 'hit') {
                 randomCardGen(1, 1)
-                console.log(`You hit: ${mainPlayer.hand}. Total: ${mainPlayer.sum()}`)
+                console.log(`You hit: ${mainPlayer.hand}. Total: ${mainPlayer.sum}`)
             } else {
-                console.log(`You decided to stay. Total: ${mainPlayer.sum()}`)
+                console.log(`You decided to stay. Total: ${mainPlayer.sum}`)
             }
         }
 
         // if player busts
-        if (mainPlayer.sum() > 21) {
+        if (mainPlayer.sum > 21) {
             console.log('Bust!')
-            console.log(`The dealer's hand: ${dealer.hand}. Total: ${dealer.sum()} `)
+            console.log(`The dealer's hand: ${dealer.hand}. Total: ${dealer.sum} `)
             console.log('Dealer wins!')
             console.log(`Current bank: $${mainPlayer.bank}`)
         }
 
         // if user chooses to stay or gets 21 (non blackjack)
-        else if (hitOrStay === 'stay' || mainPlayer.sum() === 21) {
-            console.log(`The dealer's hand: ${dealer.hand}. Total: ${dealer.sum()} `)
+        else if (hitOrStay === 'stay' || mainPlayer.sum === 21) {
+            console.log(`The dealer's hand: ${dealer.hand}. Total: ${dealer.sum} `)
             // dealer uncovers card
             // if blackjack.. dealer wins
-            if (dealer.sum() === 21) {
+            if (dealer.sum === 21) {
                 console.log('Blackjack!')
                 console.log('Dealer wins.')
                 console.log(`Current bank: $${mainPlayer.bank}`)
             }
             else {
                 // loop as long as the dealers sum is below 17 he has to draw
-                while (dealer.sum() < 17) {
+                while (dealer.sum < 17) {
                     randomCardGen(1, 0)
-                    console.log(`The dealer hit: ${dealer.hand}. Total: ${dealer.sum()} `)
+                    console.log(`The dealer hit: ${dealer.hand}. Total: ${dealer.sum} `)
                 }
-                if (dealer.sum() > 21) {
+                if (dealer.sum > 21) {
                     console.log('Dealer bust!')
-                    console.log(`Your hand: ${mainPlayer.hand} -- Total: ${mainPlayer.sum()}`)
+                    console.log(`Your hand: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
                     console.log('You win!')
                     mainPlayer.bank += bet * 2
                     console.log(`Current bank: $${mainPlayer.bank}`)
                 }
                 // if dealers sum is >= 17.. he has to stay and the hands are compared
-                else if (dealer.sum() >= 17) {
+                else if (dealer.sum >= 17) {
                     console.log('The dealer stays.')
-                    console.log(`Your total: ${mainPlayer.sum()}. Dealer total: ${dealer.sum()} `)
-                    if (mainPlayer.sum() > dealer.sum()) {
+                    console.log(`Your total: ${mainPlayer.sum}. Dealer total: ${dealer.sum} `)
+                    if (mainPlayer.sum > dealer.sum) {
                         console.log('You win!')
                         mainPlayer.bank += bet * 2
-                    } else if (mainPlayer.sum() === dealer.sum()) {
+                    } else if (mainPlayer.sum === dealer.sum) {
                         console.log('Push!')
                         mainPlayer.bank += bet * 1
                     } else {
@@ -125,10 +143,35 @@ while (isGameActive) {
     }
 }
 
+
+
+// function randomCardGen(num, player) {
+//     let randomNums = []
+//     for (let i = 0; i < num; i++) {
+//         randomNums.push(Math.floor(Math.random() * 10) + 1)
+//     }
+//     playerHands[player].hand = [...playerHands[player].hand, ...randomNums]
+// }
+
+
+
+
+
 function randomCardGen(num, player) {
     let randomNums = []
     for (let i = 0; i < num; i++) {
-        randomNums.push(Math.floor(Math.random() * 10) + 1)
+        randomNums.push(Math.floor(Math.random() * 13) + 1)
     }
-    playerHands[player].hand = [...playerHands[player].hand, ...randomNums]
+    console.log(randomNums)
+
+    let cardNames = randomNums.map(nums => cardPossibilities[nums - 1].cardName)
+    let cardValues = randomNums.map(nums => cardPossibilities[nums - 1].cardValue)
+    let cardSum = cardValues.reduce((p, c) => p + c)
+
+
+    playerHands[player].hand = [...playerHands[player].hand, ...cardNames]
+    playerHands[player].handValues = [...playerHands[player].handValues, ...cardValues]
+    playerHands[player].sum = [playerHands[player].sum + cardSum]
+
 }
+
