@@ -25,13 +25,14 @@ name = name[0].toUpperCase() + name.slice(1).trim()
 // object with user and dealer data
 let playerHands = [
     { name: 'The dealer', hand: [], handValues: [], sum: 0 },
-    { name: name, hand: [], handValues: [], sum: 0, bank: 1000, prevBet: 0, minBet: 5 },
+    { name: name, hand: [], handValues: [], sum: 0, bank: 1000, minBet: 5 },
 ]
 
-let dealer = playerHands[0];
-let mainPlayer = playerHands[1];
-
-
+const dealer = playerHands[0];
+const mainPlayer = playerHands[1];
+let betOptions = ['$5', '$25', '$50', '$100', '$500']
+let roundNum = 0;
+const space = '--------------------------------------------------'
 let isGameActive = false;
 let isLeaveIntro = false;
 
@@ -39,7 +40,7 @@ while (!isLeaveIntro) {
     let begin = prompt(`Welcome ${name}. Are you ready to start the game? Yes or No `)
     if (begin.trim().toLowerCase() == 'yes' || begin.trim().toLowerCase() == 'ya' || begin.trim().toLowerCase() == 'y') {
 
-        console.log('The game has begun. Type quit anytime to leave the table.');
+        console.log('Type quit anytime to leave the table.');
         for (let i = 0; i < playerHands.length; i++) {
             console.log(`${playerHands[i].name} has entered the table.`)
         }
@@ -61,9 +62,7 @@ const hideDearlerCards = (arr) => (
 let bet = 0
 // begin game loop
 while (isGameActive) {
-
     //place bets
-    let betOptions = ['$5', '$25', '$50', '$100', '$500']
     console.log(`Current bank: $${mainPlayer.bank} -- Minimum Bet: $${mainPlayer.minBet}`)
     bet = prompt(`Place your bet using any combination of the available chips (${betOptions}) `)
     if (bet !== 'quit' && bet !== 'q') {
@@ -77,7 +76,8 @@ while (isGameActive) {
             else console.log('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
             bet = prompt(`Place your bet using any combination of the available chips (${betOptions}) `)
         }
-
+        
+        roundNum++
         mainPlayer.bank -= bet
         console.log(`Current bet: $${bet}. Current bank: $${mainPlayer.bank}`)
         randomCardGen(2, 0)
@@ -163,29 +163,50 @@ while (isGameActive) {
             }
         }
     } else {
-        console.log('You have left the game')
+        console.log('You have left the table.')
+        endGameResults()
         isGameActive = false
     }
-    roundReset()
+    handReset()
+    setMinBet()
+    isBankEmpty()
+}
 
+function isBankEmpty() {
+    if (mainPlayer.bank < 5) {
+        console.log('You have run out of money')
+        console.log('The dealer wins the game')
+        endGameResults()
+        isGameActive = false
+    }
+}
+
+function setMinBet() {
     if (bet < mainPlayer.bank) {
         mainPlayer.minBet = bet
     } else {
         mainPlayer.minBet = 5
     }
-    if(mainPlayer.bank < 5) {
-        console.log('dealer wins')
-        
-    }
 }
 
-function roundReset() {
+function handReset() {
     mainPlayer.hand = []
     mainPlayer.handValues = []
     mainPlayer.sum = 0
     dealer.hand = []
     dealer.handValues = []
     dealer.sum = 0
+}
+
+function endGameResults() {
+    const loss = (1000 - mainPlayer.bank);
+    const gain = (mainPlayer.bank - 1000);
+    console.log(space)
+    console.log('Game results:')
+    console.log(`Rounds played: ${roundNum}`)
+    console.log(`Current bank: $${mainPlayer.bank}`)
+    if (mainPlayer.bank <= 1000) console.log(`Money lost: $${loss}`)
+    if (mainPlayer.bank > 1000) console.log(`Money earned: $${gain}`)
 }
 
 
