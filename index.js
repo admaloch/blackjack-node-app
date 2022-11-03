@@ -30,7 +30,9 @@ let playerHands = [
 
 const dealer = playerHands[0];
 const mainPlayer = playerHands[1];
-let betOptions = ['$5', '$25', '$50', '$100', '$500']
+
+let betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000']
+
 let roundNum = 0;
 const space = '--------------------------------------------------'
 let isGameActive = false;
@@ -64,6 +66,7 @@ let bet = 0
 while (isGameActive) {
     //place bets
     console.log(`Current bank: $${mainPlayer.bank} -- Minimum Bet: $${mainPlayer.minBet}`)
+
     bet = prompt(`Place your bet using any combination of the available chips (${betOptions}) `)
     if (bet !== 'quit' && bet !== 'q') {
 
@@ -76,7 +79,7 @@ while (isGameActive) {
             else console.log('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
             bet = prompt(`Place your bet using any combination of the available chips (${betOptions}) `)
         }
-        
+
         roundNum++
         mainPlayer.bank -= bet
         console.log(`Current bet: $${bet}. Current bank: $${mainPlayer.bank}`)
@@ -167,8 +170,10 @@ while (isGameActive) {
         endGameResults()
         isGameActive = false
     }
+    changeBetOptions()
     handReset()
     setMinBet()
+
     isBankEmpty()
 }
 
@@ -182,7 +187,7 @@ function isBankEmpty() {
 }
 
 function setMinBet() {
-    if (bet < mainPlayer.bank) {
+    if (bet <= mainPlayer.bank) {
         mainPlayer.minBet = bet
     } else {
         mainPlayer.minBet = 5
@@ -196,6 +201,15 @@ function handReset() {
     dealer.hand = []
     dealer.handValues = []
     dealer.sum = 0
+}
+
+function changeBetOptions() {
+    if (mainPlayer.bank < 1000) {
+        betOptions = betOptions.map(x => parseInt(x.replace(/\D/g, "")))
+            .filter(x => x <= mainPlayer.bank).map(x => '$' + x)
+    } else {
+        betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000']
+    }
 }
 
 function endGameResults() {
