@@ -40,17 +40,18 @@ let isLeaveIntro = false;
 
 while (!isLeaveIntro) {
     console.log(space)
-    let begin = prompt(`Welcome ${name}. Are you ready to start the game? Yes or No `)
-    if (begin.trim().toLowerCase() == 'yes' || begin.trim().toLowerCase() == 'ya' || begin.trim().toLowerCase() == 'y') {
+    let begin = prompt(`Welcome ${name}. Are you ready to start the game? (Yes or No) `).trim().toLowerCase()
+    if (begin == 'yes' || begin == 'ya' || begin == 'y') {
         console.log(space)
-        console.log('Type quit anytime to leave the table.');
+        console.log('Type quit anytime to leave the table');
         console.log(space)
         for (let i = 0; i < playerHands.length; i++) {
-            console.log(`${playerHands[i].name} has entered the table.`)
+            console.log(`${playerHands[i].name} has entered the table`)
         }
+        console.log(space)
         isLeaveIntro = true;
         isGameActive = true;
-    } else if (begin.trim().toLowerCase() == 'no' || begin.trim().toLowerCase() == 'nope' || begin.trim().toLowerCase() == 'n') {
+    } else if (begin == 'no' || begin == 'nope' || begin == 'n') {
         console.log(space)
         console.log('Feel free to return and play again later')
         isLeaveIntro = true;
@@ -58,19 +59,19 @@ while (!isLeaveIntro) {
     }
     else {
         console.log(space)
-        console.log('Invalid response. Respond with (yes or no)')
+        console.log('Invalid response. Respond with (Yes or No)')
     }
 }
 
 const hideDearlerCards = (arr) => (
-    [arr[0], ...arr.slice(1).map(x => x = 'x')]
+    [arr[0], ...arr.slice(1).map(x => x = 'X')]
 )
 
 let bet = 0
 // begin game loop
 while (isGameActive) {
     //place bets
-    console.log(`Current bank: $${mainPlayer.bank} -- Minimum Bet: $${mainPlayer.minBet}`)
+    console.log(`Current bank: $${mainPlayer.bank} -- Minimum bet: $${mainPlayer.minBet}`)
 
     bet = prompt(`Place your bet using any combination of the available chips (${betOptions}) `)
     if (bet !== 'quit' && bet !== 'q') {
@@ -87,12 +88,13 @@ while (isGameActive) {
                 else if (bet === NaN) console.log('Invalid number. Make sure your bet is a number combining the values of the available chips.')
                 else console.log('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
                 bet = prompt(`Place your bet using any combination of the available chips (${betOptions}) `)
+                console.log(space)
             }
         }
 
         roundNum++
         mainPlayer.bank -= bet
-        console.log(`Current bet: $${bet}. Current bank: $${mainPlayer.bank}`)
+        console.log(`Current bet: $${bet} -- Current bank: $${mainPlayer.bank}`)
         randomCardGen(2, 0)
         randomCardGen(2, 1)
         console.log(`The dealer's hand: ${hideDearlerCards(dealer.hand)}`)
@@ -103,17 +105,20 @@ while (isGameActive) {
             console.log(space)
             console.log('Blackjack!')
             console.log(space)
-            console.log(`The dealer's hand revealed: ${dealer.hand}. Total: ${dealer.sum} `)
+            console.log(`The dealer's hand revealed: ${dealer.hand} -- Total: ${dealer.sum} `)
 
             if (dealer.sum !== 21) {
                 console.log(space)
                 console.log('You win!')
                 mainPlayer.bank += bet * 2.5
+                console.log(space)
 
             } else {
                 console.log(space)
-                console.log('Dealer got a blackjack!')
+                console.log('The dealer got a blackjack!')
+                console.log(space)
                 console.log('Push!')
+                console.log(space)
                 mainPlayer.bank += bet * 1
             }
         }
@@ -124,11 +129,9 @@ while (isGameActive) {
             // determine if bank is big enough for doubleup
             if (bet <= mainPlayer.bank) {
                 console.log(space)
-                let doubleUp = prompt("Double up? (Yes or No) ")
-                while (doubleUp !== 'yes' && doubleUp !== 'y' && doubleUp !== 'no' && doubleUp !== 'n') {
-                    console.log(space)
-                    console.log('Invalid response. Pick yes or no')
-                    doubleUp = prompt("Double up? (Yes or No) ")
+                let doubleUp = prompt("Double up? (Yes or No) ").trim().toLowerCase()
+                while (doubleUp !== 'yes' && doubleUp !== 'y' && doubleUp !== 'no' && doubleUp !== 'n' && doubleUp !== 'quit' && doubleUp !== 'q') {
+                    doubleUp = prompt("Invalid response. Pick (Yes or No) ")
                 }
 
                 if (doubleUp === 'yes' || doubleUp === 'y') {
@@ -136,54 +139,67 @@ while (isGameActive) {
                     mainPlayer.betDoubled = true
                     mainPlayer.bank -= bet
                     bet = bet * 2
-                    console.log(`Current bet: $${bet} -- Current bank: $${mainPlayer.bank}`)
+                    console.log(`Doubled bet: $${bet} -- Current bank: $${mainPlayer.bank}`)
                     randomCardGen(1, 1)
-                    console.log(`You hit: ${mainPlayer.hand}. Total: ${mainPlayer.sum}`)
+                    console.log(`You hit: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
                     hitOrStay = 'stay'
-                } else {
+                } else if (doubleUp === 'quit' || doubleUp === 'q') {
+                    console.log('You have left the table')
+                    endGameResults()
+                    isGameActive = false
+                }
+                else {
                     hitOrStay = ''
+                    console.log(space)
                 }
             }  // loop option to hit or stay until player chooses stay or busts
 
-            while (hitOrStay !== 'stay' && mainPlayer.sum < 21) {
-                console.log(space)
-                hitOrStay = prompt('Hit or Stay ')
-                if (hitOrStay === 'hit') {
+            while (hitOrStay !== 'stay' && hitOrStay !== 's' && hitOrStay !== 'quit' && hitOrStay !== 'q'
+                && mainPlayer.sum < 21 && isGameActive !== false) {
+
+                hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
+                if (hitOrStay === 'hit' || hitOrStay === 'h') {
                     randomCardGen(1, 1)
-                    console.log(space)
-                    console.log(`You hit: ${mainPlayer.hand}. Total: ${mainPlayer.sum}`)
-                } else {
-                    console.log(space)
-                    console.log(`You decided to stay.`)
+                    console.log(`You hit: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
+                }
+                else if (hitOrStay === 'quit' || hitOrStay === 'q') {
+                    console.log('You have left the table')
+                    endGameResults()
+                    isGameActive = false
+                } else if (hitOrStay === 'stay' || hitOrStay === 's') {
+                    console.log('You have decided to stay')
+                }
+                else {
+                    console.log(`Invalid resonse. Pick hit or stay`)
                 }
             }
-
 
             // if player busts
             if (mainPlayer.sum > 21) {
                 console.log(space)
                 console.log('Bust!')
                 console.log(space)
-                console.log(`The dealer's hand: ${dealer.hand}. Total: ${dealer.sum} `)
+                console.log(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
                 console.log('Dealer wins!')
                 console.log(space)
             }
 
             // if user chooses to stay or gets 21 (non blackjack)
-            else if (hitOrStay === 'stay' || mainPlayer.sum === 21) {
+            else if (hitOrStay === 'stay' || hitOrStay ==='s' || mainPlayer.sum === 21) {
                 console.log(space)
-                console.log(`The dealer's hand: ${dealer.hand}. Total: ${dealer.sum} `)
+                console.log(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
                 // dealer uncovers card
                 // if blackjack.. dealer wins
                 if (dealer.sum === 21) {
                     console.log('Blackjack!')
-                    console.log('Dealer wins.')
+                    console.log('Dealer wins!')
+                    console.log(space)
                 }
                 else {
                     // loop as long as the dealers sum is below 17 he has to draw
                     while (dealer.sum < 17) {
                         randomCardGen(1, 0)
-                        console.log(`The dealer hit: ${dealer.hand}. Total: ${dealer.sum} `)
+                        console.log(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
                     }
                     if (dealer.sum > 21) {
                         console.log(space)
@@ -196,16 +212,19 @@ while (isGameActive) {
                     }
                     // if dealers sum is >= 17.. he has to stay and the hands are compared
                     else if (dealer.sum >= 17) {
-                        console.log('The dealer stays.')
-                        console.log(`Your total: ${mainPlayer.sum}. Dealer total: ${dealer.sum} `)
+                        console.log('The dealer stays')
+                        console.log(`Your total: ${mainPlayer.sum} -- Dealer total: ${dealer.sum} `)
                         if (mainPlayer.sum > dealer.sum) {
+                            console.log(space)
                             console.log('You win!')
                             mainPlayer.bank += bet * 2
                         } else if (mainPlayer.sum === dealer.sum) {
+                            console.log(space)
                             console.log('Push!')
                             mainPlayer.bank += bet * 1
                         } else {
-                            console.log('The dealer won.')
+                            console.log(space)
+                            console.log('The dealer won!')
                         }
                         console.log(space)
                     }
@@ -213,7 +232,7 @@ while (isGameActive) {
             }
         }
     } else {
-        console.log('You have left the table.')
+        console.log('You have left the table')
         endGameResults()
         isGameActive = false
     }
@@ -273,7 +292,6 @@ function endGameResults() {
     if (mainPlayer.bank > 1000) console.log(`Money earned: $${gain}`)
     console.log(space)
 }
-
 
 function randomCardGen(num, player) {
     aceIs1(player)
