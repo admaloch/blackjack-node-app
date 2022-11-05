@@ -79,21 +79,12 @@ while (isGameActive) {
         console.log(space)
         let betNotNum = bet.trim().toLowerCase()
         bet = parseInt(bet.replace(/\D/g, ""))
-        if (betNotNum === 'quit' || betNotNum === 'q') {
-            console.log('You left the table')
-            endGameResults()
-            isBetValid = true
-            isGameActive = false
-        } else if (betNotNum === 'all') {
-            bet = mainPlayer.bank
-            isBetValid = true;
-        } else if (mainPlayer.minBet === 5 && bet < 5) {
-            console.log('Bet amount is too low. $5 is the minimum bid')
-        } else if (mainPlayer.minBet > 5 && bet < mainPlayer.minBet) {
-            console.log(`Minimum bet: $${mainPlayer.minBet}. Amount can't be lower than the bet from the previous round.`)
-        } else if (bet > mainPlayer.bank) {
-            console.log('Bet is too high. The amount cannot exceed the value in your bank')
-        } else if (bet % 5 === 0) {
+
+        if (bet % 5 === 0 && bet > mainPlayer.minBet && bet <= mainPlayer.bank || betNotNum === 'all') {
+
+            if (betNotNum === 'all') {
+                bet = mainPlayer.bank
+            }
             roundNum++
             mainPlayer.bank -= bet
             console.log(`Current bet: $${bet} -- Current bank: $${mainPlayer.bank}`)
@@ -102,9 +93,24 @@ while (isGameActive) {
             console.log(`The dealer's hand: ${hideDearlerCards(dealer.hand)}`)
             console.log(`Your hand: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
             isBetValid = true
-        } else {
-            console.log('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
         }
+        else {
+            if (betNotNum === 'quit' || betNotNum === 'q') {
+                console.log('You left the table')
+                endGameResults()
+                isBetValid = true
+                isGameActive = false
+            }  else if (mainPlayer.minBet === 5 && bet < 5) {
+                console.log('Bet amount is too low. $5 is the minimum bid')
+            } else if (mainPlayer.minBet > 5 && bet < mainPlayer.minBet) {
+                console.log(`Minimum bet: $${mainPlayer.minBet}. Amount can't be lower than the bet from the previous round.`)
+            } else if (bet > mainPlayer.bank) {
+                console.log('Bet is too high. The amount cannot exceed the value in your bank')
+            } else {
+                console.log('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
+            }
+        }
+
     }
 
     //if mainplayer gets blackjack
