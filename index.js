@@ -79,15 +79,14 @@ while (isGameActive) {
         console.log(space)
         let betNotNum = bet.trim().toLowerCase()
         bet = parseInt(bet.replace(/\D/g, ""))
-
-        if (betNotNum === 'all') {
-            bet = mainPlayer.bank
-            isBetValid = true;
-        } else if (betNotNum === 'quit' || betNotNum === 'q') {
+        if (betNotNum === 'quit' || betNotNum === 'q') {
             console.log('You left the table')
             endGameResults()
             isBetValid = true
             isGameActive = false
+        } else if (betNotNum === 'all') {
+            bet = mainPlayer.bank
+            isBetValid = true;
         } else if (mainPlayer.minBet === 5 && bet < 5) {
             console.log('Bet amount is too low. $5 is the minimum bid')
         } else if (mainPlayer.minBet > 5 && bet < mainPlayer.minBet) {
@@ -114,13 +113,11 @@ while (isGameActive) {
         console.log('Blackjack!')
         console.log(space)
         console.log(`The dealer's hand revealed: ${dealer.hand} -- Total: ${dealer.sum} `)
-
         if (dealer.sum !== 21) {
             console.log(space)
             console.log('You win!')
             mainPlayer.bank += bet * 2.5
             console.log(space)
-
         } else {
             console.log(space)
             console.log('The dealer got a blackjack!')
@@ -141,7 +138,6 @@ while (isGameActive) {
             while (doubleUp !== 'yes' && doubleUp !== 'y' && doubleUp !== 'no' && doubleUp !== 'n' && doubleUp !== 'quit' && doubleUp !== 'q') {
                 doubleUp = prompt("Invalid response. Pick (Yes or No) ")
             }
-
             if (doubleUp === 'yes' || doubleUp === 'y') {
                 console.log(space)
                 mainPlayer.betDoubled = true
@@ -164,7 +160,6 @@ while (isGameActive) {
 
         while (hitOrStay !== 'stay' && hitOrStay !== 's' && hitOrStay !== 'quit' && hitOrStay !== 'q'
             && mainPlayer.sum < 21 && isGameActive !== false) {
-
             hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
             if (hitOrStay === 'hit' || hitOrStay === 'h') {
                 randomCardGen(1, 1)
@@ -239,7 +234,6 @@ while (isGameActive) {
             }
         }
     }
-
     changeBetOptions()
     setMinBet()
     handReset()
@@ -298,7 +292,6 @@ function endGameResults() {
 }
 
 function randomCardGen(num, player) {
-    // aceIs1(player)
     let randomNums = []
     for (let i = 0; i < num; i++) {
         randomNums.push(Math.floor(Math.random() * 13) + 1)
@@ -309,19 +302,11 @@ function randomCardGen(num, player) {
     playerHands[player].hand = [...playerHands[player].hand, ...cardNames]
     playerHands[player].handValues = [...playerHands[player].handValues, ...cardValues]
     playerHands[player].sum = playerHands[player].sum += cardSum
-    alterAceValue(player)
+    changeAceValue(player)
 }
 
-// function aceIs1(player) {
-//     //not sure if this works.. should turn value of ace from 11 to 1 if the 
-//     if (playerHands[player].hand.includes('Ace')) {
-//         if (playerHands[player].sum >= 11) {
-//             cardPossibilities[0].cardValue = 1
-//         }
-//     }
-// }
-
-function alterAceValue(player) {
+// subtracts 10 from sum if sum goes over 21... doesn't work properly..
+function changeAceValue(player) {
     if (playerHands[player].hand.includes('Ace')) {
         if (playerHands[player].sum > 21) {
             if (playerHands[player].handValues.includes(11)) {
