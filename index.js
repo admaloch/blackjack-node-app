@@ -32,7 +32,6 @@ let playerHands = [
 const dealer = playerHands[0];
 const mainPlayer = playerHands[1];
 
-
 let betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
 let roundNum = 0;
 let isGameActive = false;
@@ -80,7 +79,7 @@ while (isGameActive) {
         let betNotNum = bet.trim().toLowerCase()
         bet = parseInt(bet.replace(/\D/g, ""))
 
-        if (bet % 5 === 0 && bet > mainPlayer.minBet && bet <= mainPlayer.bank || betNotNum === 'all') {
+        if (bet % 5 === 0 && bet >= mainPlayer.minBet && bet <= mainPlayer.bank || betNotNum === 'all') {
 
             if (betNotNum === 'all') {
                 bet = mainPlayer.bank
@@ -88,10 +87,11 @@ while (isGameActive) {
             roundNum++
             mainPlayer.bank -= bet
             console.log(`Current bet: $${bet} -- Current bank: $${mainPlayer.bank}`)
-            randomCardGen(2, 0)
-            randomCardGen(2, 1)
+            randomCardGen(2, dealer)
+            randomCardGen(2, mainPlayer)
             console.log(`The dealer's hand: ${hideDearlerCards(dealer.hand)}`)
             console.log(`Your hand: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
+            console.log(space)
             isBetValid = true
         }
         else {
@@ -100,7 +100,7 @@ while (isGameActive) {
                 endGameResults()
                 isBetValid = true
                 isGameActive = false
-            }  else if (mainPlayer.minBet === 5 && bet < 5) {
+            } else if (mainPlayer.minBet === 5 && bet < 5) {
                 console.log('Bet amount is too low. $5 is the minimum bid')
             } else if (mainPlayer.minBet > 5 && bet < mainPlayer.minBet) {
                 console.log(`Minimum bet: $${mainPlayer.minBet}. Amount can't be lower than the bet from the previous round.`)
@@ -110,12 +110,10 @@ while (isGameActive) {
                 console.log('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
             }
         }
-
     }
 
     //if mainplayer gets blackjack
     if (mainPlayer.sum === 21) {
-        console.log(space)
         console.log('Blackjack!')
         console.log(space)
         console.log(`The dealer's hand revealed: ${dealer.hand} -- Total: ${dealer.sum} `)
@@ -139,7 +137,7 @@ while (isGameActive) {
         let hitOrStay = ''
         // determine if bank is big enough for doubleup
         if (bet <= mainPlayer.bank) {
-            console.log(space)
+
             let doubleUp = prompt("Double up? (Yes or No) ").trim().toLowerCase()
             while (doubleUp !== 'yes' && doubleUp !== 'y' && doubleUp !== 'no' && doubleUp !== 'n' && doubleUp !== 'quit' && doubleUp !== 'q') {
                 doubleUp = prompt("Invalid response. Pick (Yes or No) ")
@@ -150,7 +148,7 @@ while (isGameActive) {
                 mainPlayer.bank -= bet
                 bet = bet * 2
                 console.log(`Doubled bet: $${bet} -- Current bank: $${mainPlayer.bank}`)
-                randomCardGen(1, 1)
+                randomCardGen(1, mainPlayer)
                 console.log(`You hit: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
                 hitOrStay = 'stay'
             } else if (doubleUp === 'quit' || doubleUp === 'q') {
@@ -166,9 +164,10 @@ while (isGameActive) {
 
         while (hitOrStay !== 'stay' && hitOrStay !== 's' && hitOrStay !== 'quit' && hitOrStay !== 'q'
             && mainPlayer.sum < 21 && isGameActive !== false) {
+
             hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
             if (hitOrStay === 'hit' || hitOrStay === 'h') {
-                randomCardGen(1, 1)
+                randomCardGen(1, mainPlayer)
                 console.log(`You hit: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
             }
             else if (hitOrStay === 'quit' || hitOrStay === 'q') {
@@ -197,7 +196,6 @@ while (isGameActive) {
         else if (hitOrStay === 'stay' || hitOrStay === 's' || mainPlayer.sum === 21) {
             console.log(space)
             console.log(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
-            // dealer uncovers card
             // if blackjack.. dealer wins
             if (dealer.sum === 21) {
                 console.log('Blackjack!')
@@ -207,7 +205,7 @@ while (isGameActive) {
             else {
                 // loop as long as the dealers sum is below 17 he has to draw
                 while (dealer.sum < 17) {
-                    randomCardGen(1, 0)
+                    randomCardGen(1, dealer)
                     console.log(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
                 }
                 if (dealer.sum > 21) {
@@ -297,27 +295,30 @@ function endGameResults() {
     console.log(space)
 }
 
-function randomCardGen(num, player) {
+function randomCardGen(numCards, player) {
     let randomNums = []
-    for (let i = 0; i < num; i++) {
+
+    for (let i = 0; i < numCards; i++) {
         randomNums.push(Math.floor(Math.random() * 13) + 1)
     }
     let cardNames = randomNums.map(nums => cardPossibilities[nums - 1].cardName)
     let cardValues = randomNums.map(nums => cardPossibilities[nums - 1].cardValue)
     let cardSum = cardValues.reduce((p, c) => p + c)
-    playerHands[player].hand = [...playerHands[player].hand, ...cardNames]
-    playerHands[player].handValues = [...playerHands[player].handValues, ...cardValues]
-    playerHands[player].sum = playerHands[player].sum += cardSum
-    changeAceValue(player)
+
+    player.hand = [...player.hand, ...cardNames]
+    player.handValues = [...player.handValues, ...cardValues]
+    player.sum = player.sum += cardSum
+
+    alterAceValue(player)
 }
 
-// subtracts 10 from sum if sum goes over 21... doesn't work properly..
-function changeAceValue(player) {
-    if (playerHands[player].hand.includes('Ace')) {
-        if (playerHands[player].sum > 21) {
-            if (playerHands[player].handValues.includes(11)) {
-                playerHands[player].sum -= 10
-            }
+function alterAceValue(player) {
+    if (player.hand.includes('Ace')) {
+        while (player.sum > 21) {
+            let lastIndex = player.handValues.lastIndexOf(11);
+            player.handValues[lastIndex] = 1
+            player.sum = player.handValues.reduce((p, c) => p + c)
+            if (player.handValues.includes(11) === false) break;
         }
     }
 }
