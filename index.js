@@ -1,17 +1,18 @@
+const initCardAmount = 8;
 const cardPossibilities = [
-    { cardName: 'Ace', cardValue: 11 },
-    { cardName: '2', cardValue: 2 },
-    { cardName: '3', cardValue: 3 },
-    { cardName: '4', cardValue: 4 },
-    { cardName: '5', cardValue: 5 },
-    { cardName: '6', cardValue: 6 },
-    { cardName: '7', cardValue: 7 },
-    { cardName: '8', cardValue: 8 },
-    { cardName: '9', cardValue: 9 },
-    { cardName: '10', cardValue: 10 },
-    { cardName: 'Jack', cardValue: 10 },
-    { cardName: 'Queen', cardValue: 10 },
-    { cardName: 'King', cardValue: 10 },
+    { cardName: 'Ace', cardValue: 11, numInDeck: 8 },
+    { cardName: '2', cardValue: 2, numInDeck: 8 },
+    { cardName: '3', cardValue: 3, numInDeck: 8 },
+    { cardName: '4', cardValue: 4, numInDeck: 8 },
+    { cardName: '5', cardValue: 5, numInDeck: 8 },
+    { cardName: '6', cardValue: 6, numInDeck: 8 },
+    { cardName: '7', cardValue: 7, numInDeck: 8 },
+    { cardName: '8', cardValue: 8, numInDeck: 8 },
+    { cardName: '9', cardValue: 9, numInDeck: 8 },
+    { cardName: '10', cardValue: 10, numInDeck: 8 },
+    { cardName: 'Jack', cardValue: 10, numInDeck: 8 },
+    { cardName: 'Queen', cardValue: 10, numInDeck: 8 },
+    { cardName: 'King', cardValue: 10, numInDeck: 8 },
 ]
 
 // Begin game
@@ -196,9 +197,11 @@ while (isGameActive) {
         else if (hitOrStay === 'stay' || hitOrStay === 's' || mainPlayer.sum === 21) {
             console.log(space)
             console.log(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
+            console.log(space)
             // if blackjack.. dealer wins
             if (dealer.sum === 21) {
                 console.log('Blackjack!')
+                console.log(space)
                 console.log('Dealer wins!')
                 console.log(space)
             }
@@ -238,12 +241,86 @@ while (isGameActive) {
             }
         }
     }
+    shuffle()
     changeBetOptions()
     setMinBet()
     handReset()
     isBankEmpty()
 }
 
+// runs whenever cards are dealt
+// generates hands for players
+// updates hand info in the playerHands array
+//updates the cardPossibilities array
+function randomCardGen(numCards, player) {
+    let emptyCardArray = isCardEmpty()
+    let randomNums = []
+    genRandomNums(numCards, emptyCardArray, randomNums)
+    let cardNames = randomNums.map(nums => cardPossibilities[nums - 1].cardName)
+    let cardValues = randomNums.map(nums => cardPossibilities[nums - 1].cardValue)
+    let cardSum = cardValues.reduce((p, c) => p + c)
+    player.hand = [...player.hand, ...cardNames]
+    player.handValues = [...player.handValues, ...cardValues]
+    player.sum = player.sum += cardSum
+    removeFromDeck(cardNames)
+    alterAceValue(player)
+}
+
+// test if card type is empty before cards get dealt to avoid dealing these cards
+function isCardEmpty() {
+    return cardPossibilities.map((obj, i) => Object.assign(obj, { index: i }))
+        .filter(x => x.numInDeck == 0).map(y => (y.index + 1))
+}
+
+//generate random nums
+function genRandomNums(numCards, emptyCardArray, randomNums) {
+    for (let i = 0; i < numCards; i++) {
+        emptyCardArray.length === 0
+            ? randomNums.push(Math.floor(Math.random() * 13) + 1)
+            : randomNums.push(randomExcluded(emptyCardArray))
+    }
+}
+
+// generates cards but accepts an array of cards to exclude if they are empty in the card object
+function randomExcluded(exclude) {
+    const nums = [];
+    for (let i = 1; i <= 13; i++) {
+        if (!exclude.includes(i)) nums.push(i);
+    }
+    if (nums.length === 0) return false;
+    const randomIndex = Math.floor(Math.random() * nums.length);
+    return nums[randomIndex];
+}
+
+// subtract cards that get delt from the cardPossibilities object
+function removeFromDeck(cardNames) {
+    return cardPossibilities.filter(item => cardNames.includes(item.cardName))
+        .forEach(x => x.numInDeck -= 1)
+}
+
+//changes the last instance of ace from 11 to 1 as long as the players sum is > 21
+function alterAceValue(player) {
+    if (player.hand.includes('Ace')) {
+        while (player.sum > 21) {
+            let lastIndex = player.handValues.lastIndexOf(11);
+            player.handValues[lastIndex] = 1
+            player.sum = player.handValues.reduce((p, c) => p + c)
+            if (player.handValues.includes(11) === false) break;
+        }
+    }
+}
+
+// reset card amount in card possibilities array once 1/2 of deck used
+function shuffle() {
+    const sum = cardPossibilities.map(x => x.numInDeck).reduce((p, c) => p + c)
+    if (sum < 52) {
+        cardPossibilities.forEach(cards => cards.numInDeck = initCardAmount)
+        console.log('Deck is being shuffled')
+        console.log(space)
+    }
+}
+
+// ends game when the player runs out of money :(
 function isBankEmpty() {
     if (mainPlayer.bank < 5) {
         console.log('You have run out of money')
@@ -253,6 +330,7 @@ function isBankEmpty() {
     }
 }
 
+// updates min bet for player based on previous bet/amount in bank
 function setMinBet() {
     if (bet <= mainPlayer.bank && mainPlayer.betDoubled === false) {
         mainPlayer.minBet = bet
@@ -263,6 +341,7 @@ function setMinBet() {
     }
 }
 
+// resets hand info in playerHands array
 function handReset() {
     mainPlayer.hand = []
     mainPlayer.handValues = []
@@ -273,6 +352,7 @@ function handReset() {
     dealer.sum = 0
 }
 
+// updates bet options based on amount in players bank
 function changeBetOptions() {
     betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
     if (mainPlayer.bank < 1000) {
@@ -282,6 +362,7 @@ function changeBetOptions() {
     }
 }
 
+// displays final stats when player loses or leaves the table
 function endGameResults() {
     const loss = (1000 - mainPlayer.bank);
     const gain = (mainPlayer.bank - 1000);
@@ -293,32 +374,4 @@ function endGameResults() {
     if (mainPlayer.bank <= 1000) console.log(`Money lost: $${loss}`)
     if (mainPlayer.bank > 1000) console.log(`Money earned: $${gain}`)
     console.log(space)
-}
-
-function randomCardGen(numCards, player) {
-    let randomNums = []
-
-    for (let i = 0; i < numCards; i++) {
-        randomNums.push(Math.floor(Math.random() * 13) + 1)
-    }
-    let cardNames = randomNums.map(nums => cardPossibilities[nums - 1].cardName)
-    let cardValues = randomNums.map(nums => cardPossibilities[nums - 1].cardValue)
-    let cardSum = cardValues.reduce((p, c) => p + c)
-
-    player.hand = [...player.hand, ...cardNames]
-    player.handValues = [...player.handValues, ...cardValues]
-    player.sum = player.sum += cardSum
-
-    alterAceValue(player)
-}
-
-function alterAceValue(player) {
-    if (player.hand.includes('Ace')) {
-        while (player.sum > 21) {
-            let lastIndex = player.handValues.lastIndexOf(11);
-            player.handValues[lastIndex] = 1
-            player.sum = player.handValues.reduce((p, c) => p + c)
-            if (player.handValues.includes(11) === false) break;
-        }
-    }
 }
