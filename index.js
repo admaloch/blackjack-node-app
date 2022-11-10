@@ -1,19 +1,5 @@
-const initCardAmount = 8;
-const cardPossibilities = [
-    { cardName: 'Ace', cardValue: 11, numInDeck: 8 },
-    { cardName: '2', cardValue: 2, numInDeck: 8 },
-    { cardName: '3', cardValue: 3, numInDeck: 8 },
-    { cardName: '4', cardValue: 4, numInDeck: 8 },
-    { cardName: '5', cardValue: 5, numInDeck: 8 },
-    { cardName: '6', cardValue: 6, numInDeck: 8 },
-    { cardName: '7', cardValue: 7, numInDeck: 8 },
-    { cardName: '8', cardValue: 8, numInDeck: 8 },
-    { cardName: '9', cardValue: 9, numInDeck: 8 },
-    { cardName: '10', cardValue: 10, numInDeck: 8 },
-    { cardName: 'Jack', cardValue: 10, numInDeck: 8 },
-    { cardName: 'Queen', cardValue: 10, numInDeck: 8 },
-    { cardName: 'King', cardValue: 10, numInDeck: 8 },
-]
+const cardUtils = require("./utils/card")
+const shuffleUtils = require("./utils/deck")
 
 // Begin game
 const space = '--------------------------------------------------'
@@ -32,7 +18,6 @@ let playerHands = [
 
 const dealer = playerHands[0];
 const mainPlayer = playerHands[1];
-
 let betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
 let roundNum = 0;
 let isGameActive = false;
@@ -71,7 +56,6 @@ let bet = 0
 // begin game loop
 while (isGameActive) {
     console.log(`Current bank: $${mainPlayer.bank} -- Minimum bet: $${mainPlayer.minBet}`)
-
     // Bets -- prompts the user for a bet until a valid bet is placed or the user quits the game
     let isBetValid = false
     while (isBetValid !== true) {
@@ -79,17 +63,15 @@ while (isGameActive) {
         console.log(space)
         let betNotNum = bet.trim().toLowerCase()
         bet = parseInt(bet.replace(/\D/g, ""))
-
         if (bet % 5 === 0 && bet >= mainPlayer.minBet && bet <= mainPlayer.bank || betNotNum === 'all') {
-
             if (betNotNum === 'all') {
                 bet = mainPlayer.bank
             }
             roundNum++
             mainPlayer.bank -= bet
             console.log(`Current bet: $${bet} -- Current bank: $${mainPlayer.bank}`)
-            randomCardGen(2, dealer)
-            randomCardGen(2, mainPlayer)
+            cardUtils.randomCardGen(2, dealer)
+            cardUtils.randomCardGen(2, mainPlayer)
             console.log(`The dealer's hand: ${hideDearlerCards(dealer.hand)}`)
             console.log(`Your hand: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
             console.log(space)
@@ -138,7 +120,6 @@ while (isGameActive) {
         let hitOrStay = ''
         // determine if bank is big enough for doubleup
         if (bet <= mainPlayer.bank) {
-
             let doubleUp = prompt("Double up? (Yes or No) ").trim().toLowerCase()
             while (doubleUp !== 'yes' && doubleUp !== 'y' && doubleUp !== 'no' && doubleUp !== 'n' && doubleUp !== 'quit' && doubleUp !== 'q') {
                 doubleUp = prompt("Invalid response. Pick (Yes or No) ")
@@ -149,7 +130,7 @@ while (isGameActive) {
                 mainPlayer.bank -= bet
                 bet = bet * 2
                 console.log(`Doubled bet: $${bet} -- Current bank: $${mainPlayer.bank}`)
-                randomCardGen(1, mainPlayer)
+                cardUtils.randomCardGen(1, mainPlayer)
                 console.log(`You hit: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
                 hitOrStay = 'stay'
             } else if (doubleUp === 'quit' || doubleUp === 'q') {
@@ -165,10 +146,9 @@ while (isGameActive) {
 
         while (hitOrStay !== 'stay' && hitOrStay !== 's' && hitOrStay !== 'quit' && hitOrStay !== 'q'
             && mainPlayer.sum < 21 && isGameActive !== false) {
-
             hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
             if (hitOrStay === 'hit' || hitOrStay === 'h') {
-                randomCardGen(1, mainPlayer)
+                cardUtils.randomCardGen(1, mainPlayer)
                 console.log(`You hit: ${mainPlayer.hand} -- Total: ${mainPlayer.sum}`)
             }
             else if (hitOrStay === 'quit' || hitOrStay === 'q') {
@@ -208,7 +188,7 @@ while (isGameActive) {
             else {
                 // loop as long as the dealers sum is below 17 he has to draw
                 while (dealer.sum < 17) {
-                    randomCardGen(1, dealer)
+                    cardUtils.randomCardGen(1, dealer)
                     console.log(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
                 }
                 if (dealer.sum > 21) {
@@ -241,83 +221,11 @@ while (isGameActive) {
             }
         }
     }
-    shuffle()
+    shuffleUtils.shuffle()
     changeBetOptions()
     setMinBet()
     handReset()
     isBankEmpty()
-}
-
-// runs whenever cards are dealt
-// generates hands for players
-// updates hand info in the playerHands array
-//updates the cardPossibilities array
-function randomCardGen(numCards, player) {
-    let emptyCardArray = isCardEmpty()
-    let randomNums = []
-    genRandomNums(numCards, emptyCardArray, randomNums)
-    let cardNames = randomNums.map(nums => cardPossibilities[nums - 1].cardName)
-    let cardValues = randomNums.map(nums => cardPossibilities[nums - 1].cardValue)
-    let cardSum = cardValues.reduce((p, c) => p + c)
-    player.hand = [...player.hand, ...cardNames]
-    player.handValues = [...player.handValues, ...cardValues]
-    player.sum = player.sum += cardSum
-    removeFromDeck(cardNames)
-    alterAceValue(player)
-}
-
-// test if card type is empty before cards get dealt to avoid dealing these cards
-function isCardEmpty() {
-    return cardPossibilities.map((obj, i) => Object.assign(obj, { index: i }))
-        .filter(x => x.numInDeck == 0).map(y => (y.index + 1))
-}
-
-//generate random nums
-function genRandomNums(numCards, emptyCardArray, randomNums) {
-    for (let i = 0; i < numCards; i++) {
-        emptyCardArray.length === 0
-            ? randomNums.push(Math.floor(Math.random() * 13) + 1)
-            : randomNums.push(randomExcluded(emptyCardArray))
-    }
-}
-
-// generates cards but accepts an array of cards to exclude if they are empty in the card object
-function randomExcluded(exclude) {
-    const nums = [];
-    for (let i = 1; i <= 13; i++) {
-        if (!exclude.includes(i)) nums.push(i);
-    }
-    if (nums.length === 0) return false;
-    const randomIndex = Math.floor(Math.random() * nums.length);
-    return nums[randomIndex];
-}
-
-// subtract cards that get delt from the cardPossibilities object
-function removeFromDeck(cardNames) {
-    return cardPossibilities.filter(item => cardNames.includes(item.cardName))
-        .forEach(x => x.numInDeck -= 1)
-}
-
-//changes the last instance of ace from 11 to 1 as long as the players sum is > 21
-function alterAceValue(player) {
-    if (player.hand.includes('Ace')) {
-        while (player.sum > 21) {
-            let lastIndex = player.handValues.lastIndexOf(11);
-            player.handValues[lastIndex] = 1
-            player.sum = player.handValues.reduce((p, c) => p + c)
-            if (player.handValues.includes(11) === false) break;
-        }
-    }
-}
-
-// reset card amount in card possibilities array once 1/2 of deck used
-function shuffle() {
-    const sum = cardPossibilities.map(x => x.numInDeck).reduce((p, c) => p + c)
-    if (sum < 52) {
-        cardPossibilities.forEach(cards => cards.numInDeck = initCardAmount)
-        console.log('Deck is being shuffled')
-        console.log(space)
-    }
 }
 
 // ends game when the player runs out of money :(
