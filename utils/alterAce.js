@@ -1,5 +1,4 @@
 
-
 //changes the last instance of ace from 11 to 1 as long as the players sum is > 21
 function alterAceValue(player) {
     if (player.hand.includes('Ace')) {
