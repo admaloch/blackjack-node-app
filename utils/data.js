@@ -12,7 +12,7 @@ let playerHands = [
 ]
 
 const dealer = playerHands[0];
-const mainPlayer = playerHands[1];
+const mainPlayer = playerHands[1];``
 let roundNum = 0;
 let isGameActive = false;
 let isLeaveIntro = false;
