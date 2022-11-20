@@ -1,6 +1,6 @@
 let numPlayers = 0;
 let roundNum = 0;
-let isPlayersValid = false;
+let isPlayerNumValid = false;
 let isGameActive = false;
 let isLeaveIntro = false;
 const initCardAmount = 32;
@@ -8,7 +8,7 @@ const initCardAmount = 32;
 let dealerHand = [{name: 'The dealer', hand: [], handValues: [], sum: 0}]
 
 let playerHands = []
-    // { name: '', hand: [], handValues: [], sum: 0, bank: 1000, bet: 0, minBet: 5, betDoubled: false },
+    // { name: '', hand: [], handValues: [], sum: 0, bank: 1000, bet: 0, minBet: 5, betDoubled: false, isPlayerActive: false },
 
 
 const dealer = dealerHand[0]
@@ -31,4 +31,4 @@ const cardPossibilities = [
 
 let betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
 
-module.exports = {numPlayers, cardPossibilities, initCardAmount, playerHands, betOptions, dealer, roundNum, isGameActive, isLeaveIntro, isPlayersValid }
+module.exports = {numPlayers, cardPossibilities, initCardAmount, playerHands, betOptions, dealer, roundNum, isGameActive, isLeaveIntro, isPlayerNumValid }
