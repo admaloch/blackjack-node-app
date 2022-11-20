@@ -59,6 +59,7 @@ while (!dataUtils.isLeaveIntro) {
 
 // begin game loop
 while (dataUtils.isGameActive) {
+    
     print(`Current bank: $${dataUtils.playerHands[0].bank} -- Minimum bet: $${dataUtils.playerHands[0].minBet}`)
     // Bets -- prompts the user for a bet until a valid bet is placed or the user quits the game
     let isBetValid = false

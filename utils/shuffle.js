@@ -5,7 +5,8 @@ const dataUtils = require("./data")
 function shuffle() {
     const space = '--------------------------------------------------'
     const sum = dataUtils.cardPossibilities.map(x => x.numInDeck).reduce((p, c) => p + c)
-    if (sum < 52) {
+    //8 decks of cards = 416 cards. 416/2 = 208.. shuffle when it gets 1/2 through
+    if (sum < 208) {
         dataUtils.cardPossibilities.forEach(cards => cards.numInDeck = dataUtils.initCardAmount)
         print('Deck is being shuffled')
         print(space)
