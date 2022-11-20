@@ -59,46 +59,57 @@ while (!dataUtils.isLeaveIntro) {
 
 // begin game loop
 while (dataUtils.isGameActive) {
-    
+
     print(`Current bank: $${dataUtils.playerHands[0].bank} -- Minimum bet: $${dataUtils.playerHands[0].minBet}`)
     // Bets -- prompts the user for a bet until a valid bet is placed or the user quits the game
     let isBetValid = false
-    while (isBetValid !== true) {
-        dataUtils.playerHands[0].bet = prompt(`Place your bet using any combination of the available chips (${dataUtils.betOptions}) `)
-        print(space)
-        let betNotNum = dataUtils.playerHands[0].bet.trim().toLowerCase()
-        dataUtils.playerHands[0].bet = parseInt(dataUtils.playerHands[0].bet.replace(/\D/g, ""))
-        if (dataUtils.playerHands[0].bet % 5 === 0 && dataUtils.playerHands[0].bet >= dataUtils.playerHands[0].minBet && dataUtils.playerHands[0].bet <= dataUtils.playerHands[0].bank || betNotNum === 'all') {
-            if (betNotNum === 'all') {
-                dataUtils.playerHands[0].bet = dataUtils.playerHands[0].bank
-            }
-            dataUtils.roundNum++
-            dataUtils.playerHands[0].bank -= dataUtils.playerHands[0].bet
-            print(`Current bet: $${dataUtils.playerHands[0].bet} -- Current bank: $${dataUtils.playerHands[0].bank}`)
-            cardUtils.randomCardGen(2, dealer)
-            cardUtils.randomCardGen(2, dataUtils.playerHands[0])
-            print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
-            print(`Your hand: ${dataUtils.playerHands[0].hand} -- Total: ${dataUtils.playerHands[0].sum}`)
+
+    for (let i = 0; i < dataUtils.numPlayers; i++) {
+        isBetValid = false;
+        while (isBetValid !== true) {
+            dataUtils.playerHands[i].bet = prompt(`${dataUtils.playerHands[i].name}: Place your bet using any combination of the available chips (${dataUtils.betOptions}) `)
             print(space)
-            isBetValid = true
-        }
-        else {
-            if (betNotNum === 'quit' || betNotNum === 'q') {
-                print('You left the table')
-                endUtils.endGameResults()
+            let betNotNum = dataUtils.playerHands[i].bet.trim().toLowerCase()
+            dataUtils.playerHands[i].bet = parseInt(dataUtils.playerHands[i].bet.replace(/\D/g, ""))
+            if (dataUtils.playerHands[i].bet % 5 === 0 && dataUtils.playerHands[i].bet >= dataUtils.playerHands[i].minBet && dataUtils.playerHands[i].bet <= dataUtils.playerHands[i].bank || betNotNum === 'all') {
+                if (betNotNum === 'all') {
+                    dataUtils.playerHands[i].bet = dataUtils.playerHands[i].bank
+                }
+                dataUtils.playerHands[i].bank -= dataUtils.playerHands[i].bet
+                print(`${dataUtils.playerHands[i].name}'s current bet: $${dataUtils.playerHands[i].bet} -- Current bank: $${dataUtils.playerHands[i].bank}`)
+                print(space)
                 isBetValid = true
-                dataUtils.isGameActive = false
-            } else if (dataUtils.playerHands[0].minBet === 5 && bet < 5) {
-                print('Bet amount is too low. $5 is the minimum bid')
-            } else if (dataUtils.playerHands[0].minBet > 5 && dataUtils.playerHands[0].bet < dataUtils.playerHands[0].minBet) {
-                print(`Minimum bet: $${dataUtils.playerHands[0].minBet}. Amount can't be lower than the bet from the previous round.`)
-            } else if (dataUtils.playerHands[0].bet > dataUtils.playerHands[0].bank) {
-                print('Bet is too high. The amount cannot exceed the value in your bank')
-            } else {
-                print('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
+            }
+            else {
+                if (betNotNum === 'quit' || betNotNum === 'q') {
+                    print('You left the table')
+                    endUtils.endGameResults()
+                    isBetValid = true
+                    dataUtils.isGameActive = false
+                } else if (dataUtils.playerHands[i].minBet === 5 && bet < 5) {
+                    print('Bet amount is too low. $5 is the minimum bid')
+                } else if (dataUtils.playerHands[i].minBet > 5 && dataUtils.playerHands[i].bet < dataUtils.playerHands[i].minBet) {
+                    print(`Minimum bet: $${dataUtils.playerHands[i].minBet}. Amount can't be lower than the bet from the previous round.`)
+                } else if (dataUtils.playerHands[i].bet > dataUtils.playerHands[i].bank) {
+                    print('Bet is too high. The amount cannot exceed the value in your bank')
+                } else {
+                    print('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
+                }
             }
         }
     }
+
+    dataUtils.roundNum++
+    print('Dealing cards:')
+    cardUtils.randomCardGen(2, dealer)
+
+    for (let i = 0; i < dataUtils.numPlayers; i++) {
+        cardUtils.randomCardGen(2, dataUtils.playerHands[i])
+        print(`${dataUtils.playerHands[i].name}'s hand: ${dataUtils.playerHands[i].hand} -- Total: ${dataUtils.playerHands[i].sum}`)
+    }
+
+
+
 
     //if dataUtils.playerHands[0] gets blackjack
     if (dataUtils.playerHands[0].sum === 21) {
