@@ -36,7 +36,7 @@ while (!dataUtils.isLeaveIntro) {
     let begin = prompt(`Are all players ready to start the game? (Yes or No) `).trim().toLowerCase()
     if (begin == 'yes' || begin == 'ya' || begin == 'y') {
         print(space)
-        print('Type quit anytime to leave the table');
+        print('Type leave anytime to exit the table or quit to end the game');
         print(space)
         print(`${dealer.name} has entered the table`)
         for (let i = 0; i < dataUtils.playerHands.length; i++) {
@@ -59,24 +59,23 @@ while (!dataUtils.isLeaveIntro) {
 
 // begin game loop
 while (dataUtils.isGameActive) {
-
-    print(`Current bank: $${dataUtils.playerHands[0].bank} -- Minimum bet: $${dataUtils.playerHands[0].minBet}`)
     // Bets -- prompts the user for a bet until a valid bet is placed or the user quits the game
     let isBetValid = false
-
     for (let i = 0; i < dataUtils.numPlayers; i++) {
         isBetValid = false;
+        let betNotNum = ''
         while (isBetValid !== true) {
-            dataUtils.playerHands[i].bet = prompt(`${dataUtils.playerHands[i].name}: Place your bet using any combination of the available chips (${dataUtils.betOptions}) `)
-            print(space)
-            let betNotNum = dataUtils.playerHands[i].bet.trim().toLowerCase()
+            print(`${dataUtils.playerHands[i].name}:`)
+            print(`Current bank: $${dataUtils.playerHands[i].bank} -- Minimum bet: $${dataUtils.playerHands[i].minBet}`)
+            dataUtils.playerHands[i].bet = prompt(`Place your bet using any combination of the available chips (${dataUtils.betOptions}) `)
+            betNotNum = dataUtils.playerHands[i].bet.trim().toLowerCase()
             dataUtils.playerHands[i].bet = parseInt(dataUtils.playerHands[i].bet.replace(/\D/g, ""))
             if (dataUtils.playerHands[i].bet % 5 === 0 && dataUtils.playerHands[i].bet >= dataUtils.playerHands[i].minBet && dataUtils.playerHands[i].bet <= dataUtils.playerHands[i].bank || betNotNum === 'all') {
                 if (betNotNum === 'all') {
                     dataUtils.playerHands[i].bet = dataUtils.playerHands[i].bank
                 }
                 dataUtils.playerHands[i].bank -= dataUtils.playerHands[i].bet
-                print(`${dataUtils.playerHands[i].name}'s current bet: $${dataUtils.playerHands[i].bet} -- Current bank: $${dataUtils.playerHands[i].bank}`)
+                print(`Current bet: $${dataUtils.playerHands[i].bet} -- Current bank: $${dataUtils.playerHands[i].bank}`)
                 print(space)
                 isBetValid = true
             }
@@ -101,15 +100,15 @@ while (dataUtils.isGameActive) {
 
     dataUtils.roundNum++
     print('Dealing cards:')
+    print(space)
     cardUtils.randomCardGen(2, dealer)
+    print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
 
     for (let i = 0; i < dataUtils.numPlayers; i++) {
         cardUtils.randomCardGen(2, dataUtils.playerHands[i])
         print(`${dataUtils.playerHands[i].name}'s hand: ${dataUtils.playerHands[i].hand} -- Total: ${dataUtils.playerHands[i].sum}`)
     }
-
-
-
+    print(space)
 
     //if dataUtils.playerHands[0] gets blackjack
     if (dataUtils.playerHands[0].sum === 21) {
