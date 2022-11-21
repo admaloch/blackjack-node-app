@@ -8,7 +8,7 @@ const initCardAmount = 32;
 let dealerHand = [{ name: 'The dealer', hand: [], handValues: [], sum: 0, isBlackJack: false }]
 
 let playerHands = []
-// { name: '', hand: [], handValues: [], sum: 0, bank: 1000, bet: 0, minBet: 5, betDoubled: false, isPlayerActive: false },
+// { name: '', hand: [], handValues: [], sum: 0, bank: 1000, bet: 0, minBet: 5, betDoubled: false, isPlayerActive: false, isBlackjack: false },
 
 //array to filter out players when they complete the round
 let playerRoundComplete = []

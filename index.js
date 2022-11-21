@@ -121,31 +121,9 @@ while (dataUtils.isGameActive) {
     }
     print(space)
 
-    //if dataUtils.playerHands[i] gets blackjack
-    // if (dataUtils.playerHands[i].sum === 21) {
-    //     print('Blackjack!')
-    //     print(space)
-    //     print(`The dealer's hand revealed: ${dealer.hand} -- Total: ${dealer.sum} `)
-    //     if (dealer.sum !== 21) {
-    //         print(space)
-    //         print('You win!')
-    //         dataUtils.playerHands[i].bank += dataUtils.playerHands[i].bet * 2.5
-    //         print(space)
-    //     } else {
-    //         print(space)
-    //         print('The dealer got a blackjack!')
-    //         print(space)
-    //         print('Push!')
-    //         print(space)
-    //         dataUtils.playerHands[i].bank += dataUtils.playerHands[i].bet * 1
-    //     }
-    // }
-
     // if player doesn't get blackjack and has to draw
-
     let hitOrStay = ''
     playerActiveUtils.checkIfActive()
-
 
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         // determine if bank is big enough for doubleup
@@ -200,7 +178,6 @@ while (dataUtils.isGameActive) {
             print('Bust!')
             print(space)
         }
-
     }
     dataUtils.playerHands = [...dataUtils.playerHands, ...dataUtils.playerRoundComplete]
 
@@ -210,7 +187,6 @@ while (dataUtils.isGameActive) {
     if (dealer.sum === 21) {
         print('Blackjack!')
         dataUtils.dealerHand.isBlackjack = true;
-
     }
     else {
         // loop as long as the dealers sum is below 17 he has to draw
@@ -226,7 +202,6 @@ while (dataUtils.isGameActive) {
             print('Dealer bust!')
             print(space)
         }
-
     }
     resultsUtils.roundResults()
     shuffleUtils.shuffle()
