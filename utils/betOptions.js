@@ -1,26 +1,29 @@
 const dataUtils = require("./data")
 
+const player = dataUtils.playerHands
+
 // updates bet options based on amount in players bank
 function changeBetOptions() {
-    dataUtils.betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
-    for (let i = 0; i < dataUtils.playerHands.length; i++) {
-        if (dataUtils.playerHands[i].bank < 1000) {
-            dataUtils.betOptions = dataUtils.betOptions.map(x => parseInt(x.replace(/\D/g, "")))
-                .filter(x => x <= dataUtils.playerHands[i].bank).map(x => '$' + x)
-            dataUtils.betOptions.push('All')
+    let betOptions = dataUtils.betOptions
+    betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
+    for (let i = 0; i < player.length; i++) {
+        if (player[i].bank < 1000) {
+            betOptions = betOptions.map(x => parseInt(x.replace(/\D/g, "")))
+                .filter(x => x <= player[i].bank).map(x => '$' + x)
+            betOptions.push('All')
         }
     }
 }
 
 // updates min bet for player based on previous bet/amount in bank
 function setMinBet() {
-    for (let i = 0; i < dataUtils.playerHands.length; i++) {
-        if (dataUtils.playerHands[i].bet <= dataUtils.playerHands[i].bank && dataUtils.playerHands[i].betDoubled === false) {
-            dataUtils.playerHands[i].minBet = dataUtils.playerHands[i].bet
-        } else if (dataUtils.playerHands[i].bet <= dataUtils.playerHands[i].bank && dataUtils.playerHands[i].betDoubled === true) {
-            dataUtils.playerHands[i].minBet = dataUtils.playerHands[i].bet / 2
+    for (let i = 0; i < player.length; i++) {
+        if (player[i].bet <= player[i].bank && player[i].betDoubled === false) {
+            player[i].minBet = player[i].bet
+        } else if (player[i].bet <= player[i].bank && player[i].betDoubled === true) {
+            player[i].minBet = player[i].bet / 2
         } else {
-            dataUtils.playerHands[i].minBet = 5
+            player[i].minBet = 5
         }
     }
 

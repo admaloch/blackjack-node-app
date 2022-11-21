@@ -2,16 +2,18 @@ const dataUtils = require("./data")
 
 // resets hand info in playerHands array
 function handReset() {
+    const player = dataUtils.playerHands
+    const dealer = dataUtils.dealerHand
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
-        dataUtils.playerHands[i].hand = []
-        dataUtils.playerHands[i].handValues = []
-        dataUtils.playerHands[i].sum = 0
-        dataUtils.playerHands[i].betDoubled = false
-        dataUtils.playerHands[i].isBlackjack = false
-        dataUtils.dealer.hand = []
-        dataUtils.dealer.handValues = []
-        dataUtils.dealer.sum = 0
-        dataUtils.dealer.isBlackjack = false
+        player[i].hand = []
+        player[i].handValues = []
+        player[i].sum = 0
+        player[i].betDoubled = false
+        player[i].isBlackjack = false
+        dealer.hand = []
+        dealer.handValues = []
+        dealer.sum = 0
+        dealer.isBlackjack = false
     }
 }
 
