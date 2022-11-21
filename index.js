@@ -112,7 +112,7 @@ while (dataUtils.isGameActive) {
         if (dataUtils.playerHands[i].sum === 21) {
             dataUtils.playerHands[i].isPlayerActive = false;
             dataUtils.playerHands[i].isBlackjack = true;
-            
+
             print(`${dataUtils.playerHands[i].name}'s hand: ${dataUtils.playerHands[i].hand} -- Blackjack!`)
 
         } else {
@@ -203,14 +203,14 @@ while (dataUtils.isGameActive) {
 
     }
     dataUtils.playerHands = [...dataUtils.playerHands, ...dataUtils.playerRoundComplete]
-   
-//once all players have finished their round.. the dealer will finish
+
+    //once all players have finished their round.. the dealer will finish
     print(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
     // if initial cards are a blackjack.. dealer wins
     if (dealer.sum === 21) {
         print('Blackjack!')
-        dataUtils.dealer.isBlackjack = true;
-        
+        dataUtils.dealerHand.isBlackjack = true;
+
     }
     else {
         // loop as long as the dealers sum is below 17 he has to draw
@@ -218,35 +218,17 @@ while (dataUtils.isGameActive) {
             cardUtils.randomCardGen(1, dealer)
             print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
         }
-        if (dealer.sum > 21) {
-            print(space)
+        // if dealers sum is >= 17.. he has to stay and the hands are compared
+        if (dealer.sum >= 17) {
+            print('The dealer stays')
+        }
+        else {
             print('Dealer bust!')
             print(space)
-            print(`Your hand: ${dataUtils.playerHands[i].hand} -- Total: ${dataUtils.playerHands[i].sum}`)
-            print('You win!')
-            print(space)
-            dataUtils.playerHands[i].bank += dataUtils.playerHands[i].bet * 2
         }
-        // if dealers sum is >= 17.. he has to stay and the hands are compared
-        else if (dealer.sum >= 17) {
-            print('The dealer stays')
-            print(`Your total: ${dataUtils.playerHands[i].sum} -- Dealer total: ${dealer.sum} `)
-            if (dataUtils.playerHands[i].sum > dealer.sum) {
-                print(space)
-                print('You win!')
-                dataUtils.playerHands[i].bank += dataUtils.playerHands[i].bet * 2
-            } else if (dataUtils.playerHands[i].sum === dealer.sum) {
-                print(space)
-                print('Push!')
-                dataUtils.playerHands[i].bank += dataUtils.playerHands[i].bet * 1
-            } else {
-                print(space)
-                print('The dealer won!')
-            }
-            print(space)
-        }
-    }
 
+    }
+    resultsUtils.roundResults()
     shuffleUtils.shuffle()
     betUtils.changeBetOptions()
     betUtils.setMinBet()

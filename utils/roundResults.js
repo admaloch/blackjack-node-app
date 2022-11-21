@@ -25,11 +25,11 @@ const roundResults = () => {
         //dealer gets blackjack
         if (player.isBlackjack === false && dealer.isBlackjack === true) {
             print(`The dealer won`)
-            player.bank += player.bet * 2.5
         }
         //both player and dealer bust
         if (player.sum > 21 && dealer.sum > 21) {
             print(`${player.name}'s score: ${player.sum} -- ${player.name} Bust! -- Push `)
+            player.bank += player.bet
         }
         //player busts
         if (player.sum > 21 && dealer.sum < 21) {
@@ -38,10 +38,12 @@ const roundResults = () => {
         //dealer busts
         if (player.sum < 21 && dealer.sum > 21) {
             print(`${player.name}'s score: ${player.sum} -- ${player.name} won!`)
+            player.bank += player.bet * 2
         }
          //player wins
          if (player.sum > dealer.sum) {
             print(`${player.name}'s score: ${player.sum} -- ${player.name} won!`)
+            player.bank += player.bet * 2
         }
         //dealer wins
         else {
