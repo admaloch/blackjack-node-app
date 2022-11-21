@@ -12,7 +12,8 @@ const addPlayers = () => {
             bet: 0,
             minBet: 5,
             betDoubled: false,
-            isPlayerActive: false
+            isPlayerActive: false,
+            isBlackjack: false,
         };
         let name = prompt(`Player ${i + 1}: Enter your name: `)
         name = name[0].toUpperCase() + name.slice(1).trim()
