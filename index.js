@@ -19,6 +19,7 @@ print(space)
 print('Welcome to the Blackjack table')
 print(space)
 
+//asks for number of people playing
 while (!dataUtils.isPlayerNumValid) {
     dataUtils.numPlayers = parseInt(prompt("How many players? "));
     print(space)
@@ -33,6 +34,7 @@ while (!dataUtils.isPlayerNumValid) {
     }
 }
 
+//asks players to confirm start of the game
 while (!dataUtils.isLeaveIntro) {
     print(space)
     let begin = prompt(`Are all players ready to start the game? (Yes or No) `).trim().toLowerCase()
@@ -53,16 +55,16 @@ while (!dataUtils.isLeaveIntro) {
         print('Feel free to return and play again later')
         dataUtils.isLeaveIntro = true;
         print(space)
-    }
-    else {
+    } else {
         print(space)
         print('Invalid response. Respond with (Yes or No)')
     }
 }
 
-// begin game loop
+// begin game. game active until all players run out of money, leave the table, or someone quits.
 while (dataUtils.isGameActive) {
-    // Bets -- prompts the user for a bet until a valid bet is placed or the user quits the game
+
+    // all players place bets-- checks to make sure bets are valid
     let isBetValid = false
     for (let i = 0; i < dataUtils.numPlayers; i++) {
         isBetValid = false;
@@ -101,6 +103,7 @@ while (dataUtils.isGameActive) {
         }
     }
 
+    //2 cards are dealt to everyone-- only one of the dealers is shown
     dataUtils.roundNum++
     print('Dealing cards:')
     print(space)
@@ -112,21 +115,18 @@ while (dataUtils.isGameActive) {
         if (dataUtils.playerHands[i].sum === 21) {
             dataUtils.playerHands[i].isPlayerActive = false;
             dataUtils.playerHands[i].isBlackjack = true;
-
             print(`${dataUtils.playerHands[i].name}'s hand: ${dataUtils.playerHands[i].hand} -- Blackjack!`)
-
         } else {
             print(`${dataUtils.playerHands[i].name}'s hand: ${dataUtils.playerHands[i].hand} -- Total: ${dataUtils.playerHands[i].sum}`)
         }
     }
     print(space)
 
-    // if player doesn't get blackjack and has to draw
+    // player move on if they didn't get a blackjack on first 2 cards
     let hitOrStay = ''
     playerActiveUtils.checkIfActive()
-
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
-        // determine if bank is big enough for doubleup
+        // players given option to double up if their bank has enough $
         if (dataUtils.playerHands[i].bet <= dataUtils.playerHands[i].bank) {
             print(`${dataUtils.playerHands[i].name}:`)
             let doubleUp = prompt("Double up? (Yes or No) ").trim().toLowerCase()
@@ -134,7 +134,6 @@ while (dataUtils.isGameActive) {
                 doubleUp = prompt("Invalid response. Pick (Yes or No) ")
             }
             if (doubleUp === 'yes' || doubleUp === 'y') {
-
                 dataUtils.playerHands[i].betDoubled = true
                 dataUtils.playerHands[i].bank -= dataUtils.playerHands[i].bet
                 dataUtils.playerHands[i].bet = dataUtils.playerHands[i].bet * 2
@@ -142,33 +141,30 @@ while (dataUtils.isGameActive) {
                 cardUtils.randomCardGen(1, dataUtils.playerHands[i])
                 print(`You hit: ${dataUtils.playerHands[i].hand} -- Total: ${dataUtils.playerHands[i].sum}`)
                 hitOrStay = 'stay'
-
             } else if (doubleUp === 'quit' || doubleUp === 'q') {
                 print('You have left the table')
                 endUtils.endGameResults()
                 dataUtils.isGameActive = false
-            }
-            else {
+            } else {
                 hitOrStay = ''
             }
-        }  // loop option to hit or stay until player chooses stay or busts
+        }
 
+        // loop option to hit or stay until player chooses stay or busts
         while (hitOrStay !== 'stay' && hitOrStay !== 's' && hitOrStay !== 'quit' && hitOrStay !== 'q'
             && dataUtils.playerHands[i].sum < 21 && dataUtils.isGameActive !== false) {
             hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
             if (hitOrStay === 'hit' || hitOrStay === 'h') {
                 cardUtils.randomCardGen(1, dataUtils.playerHands[i])
                 print(`You hit: ${dataUtils.playerHands[i].hand} -- Total: ${dataUtils.playerHands[i].sum}`)
-            }
-            else if (hitOrStay === 'quit' || hitOrStay === 'q') {
+            } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
                 print('You have left the table')
                 endUtils.endGameResults()
                 dataUtils.isGameActive = false
             } else if (hitOrStay === 'stay' || hitOrStay === 's') {
                 print('You have decided to stay')
                 print(space)
-            }
-            else {
+            } else {
                 print(`Invalid resonse. Pick hit or stay`)
             }
         }
@@ -179,26 +175,23 @@ while (dataUtils.isGameActive) {
             print(space)
         }
     }
-    dataUtils.playerHands = [...dataUtils.playerHands, ...dataUtils.playerRoundComplete]
 
-    //once all players have finished their round.. the dealer will finish
+    //once all players finished drawing
+    //return players who got a blackjack to the original playerHands array
+    dataUtils.playerHands = [...dataUtils.playerHands, ...dataUtils.playerGotBlackjack]
+
+    //The dealer now finishes their hand
     print(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
-    // if initial cards are a blackjack.. dealer wins
     if (dealer.sum === 21) {
         print('Blackjack!')
         dataUtils.dealerHand.isBlackjack = true;
-    }
-    else {
-        // loop as long as the dealers sum is below 17 he has to draw
+    } else {
         while (dealer.sum < 17) {
             cardUtils.randomCardGen(1, dealer)
             print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
-        }
-        // if dealers sum is >= 17.. he has to stay and the hands are compared
-        if (dealer.sum >= 17) {
+        } if (dealer.sum >= 17) {
             print('The dealer stays')
-        }
-        else {
+        } else {
             print('Dealer bust!')
             print(space)
         }

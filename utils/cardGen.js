@@ -21,10 +21,4 @@ function randomCardGen(numCards, player) {
     aceUtils.alterAceValue(player)
 }
 
-
-
-
-
-
-
 module.exports = { randomCardGen }
