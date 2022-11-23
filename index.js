@@ -94,7 +94,7 @@ while (dataUtils.isGameActive) {
                     endUtils.endGameResults()
                     isBetValid = true
                     dataUtils.isGameActive = false
-                } else if (player[i].minBet === 5 && bet < 5) {
+                } else if (player[i].minBet === 5 && player[i].bet < 5) {
                     print('Bet amount is too low. $5 is the minimum bid')
                 } else if (player[i].minBet > 5 && player[i].bet < player[i].minBet) {
                     print(`Minimum bet: $${player[i].minBet}. Amount can't be lower than the bet from the previous round.`)
@@ -103,6 +103,7 @@ while (dataUtils.isGameActive) {
                 } else {
                     print('Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
                 }
+                print(space)
             }
         }
     }
@@ -132,6 +133,7 @@ while (dataUtils.isGameActive) {
         // players given option to double up if their bank has enough $
         if (player[i].bet <= player[i].bank) {
             print(`${player[i].name}:`)
+            print(`Hand: ${player[i].hand} -- Total: ${player[i].sum}`)
             let doubleUp = prompt("Double up? (Yes or No) ").trim().toLowerCase()
             while (doubleUp !== 'yes' && doubleUp !== 'y' && doubleUp !== 'no' && doubleUp !== 'n' && doubleUp !== 'quit' && doubleUp !== 'q') {
                 doubleUp = prompt("Invalid response. Pick (Yes or No) ")
@@ -143,6 +145,7 @@ while (dataUtils.isGameActive) {
                 print(`Doubled bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
                 cardUtils.randomCardGen(1, player[i])
                 print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
+                print(space)
                 hitOrStay = 'stay'
             } else if (doubleUp === 'quit' || doubleUp === 'q') {
                 print('You have left the table')
@@ -177,7 +180,7 @@ while (dataUtils.isGameActive) {
             print(space)
         } else if (player[i].sum === 21) {
             print('bust!')
-        } 
+        }
     }
 
     //once all players finished drawing
@@ -193,15 +196,16 @@ while (dataUtils.isGameActive) {
         while (dealer.sum < 17) {
             cardUtils.randomCardGen(1, dealer)
             print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
-        } if (dealer.sum > 21) {
-            print('Dealer bust!')
-            print(space)
-        } else if (dealer.sum >= 17 && dealer.sum < 21) {
-            print('The dealer stays')
-        } else {
-            print(space)
         }
     }
+    if (dealer.sum > 21) {
+        print('Dealer bust!')
+    } else if (dealer.sum >= 17 && dealer.sum < 21) {
+        print('The dealer stays')
+    } else {
+    }
+    print(space)
+
     resultsUtils.roundResults()
     shuffleUtils.shuffle()
     betUtils.changeBetOptions()
