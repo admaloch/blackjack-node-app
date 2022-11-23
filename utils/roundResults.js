@@ -1,15 +1,20 @@
 const dataUtils = require("./data")
+const print = require('./print')
 
 const roundResults = () => {
+    const space = '--------------------------------------------------'
     const player = dataUtils.playerHands
-    const dealer = dataUtils.dealer
+    const dealer = dataUtils.dealerHand[0]
+    print(`Round ${dataUtils.roundNum} results: `)
+    print(space)
+    if (!dealer.isBlackjack) {
+        print(`Dealer score: ${dealer.sum}`)
+    } else {
+        print(`Dealer: Blackjack`)
+    }
+    print(space)
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
-        
-        if (dealer.isBlackjack === true) {
-            print(`Dealer: Blackjack`)
-        } else {
-            print(`Dealer score: ${dealer.sum}`)
-        }
+
         //both player and dealer get blackjack
         if (player[i].isBlackjack === true && dealer.isBlackjack === true) {
             print(`${player[i].name}: Blackjack -- Push`)
@@ -41,5 +46,6 @@ const roundResults = () => {
             print(`${player[i].name}'s score: ${player[i].sum} -- The dealer won`)
         }
     }
+    print(space)
 }
 module.exports = { roundResults }

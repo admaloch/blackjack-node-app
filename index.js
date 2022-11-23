@@ -13,7 +13,7 @@ const playerActiveUtils = require("./utils/playerActive")
 const resultsUtils = require("./utils/roundResults")
 
 const player = dataUtils.playerHands
-const dealer = dataUtils.dealerHand
+const dealer = dataUtils.dealerHand[0]
 
 // Begin game
 const space = '--------------------------------------------------'
@@ -65,7 +65,9 @@ while (!dataUtils.isLeaveIntro) {
 
 // begin game. game active until all players run out of money, leave the table, or someone quits.
 while (dataUtils.isGameActive) {
-
+    dataUtils.roundNum++
+    print(`Begin round ${dataUtils.roundNum}`)
+    print(space)
     // all players place bets-- checks to make sure bets are valid
     let isBetValid = false
     for (let i = 0; i < dataUtils.numPlayers; i++) {
@@ -106,7 +108,6 @@ while (dataUtils.isGameActive) {
     }
 
     //2 cards are dealt to everyone-- only one of the dealers is shown
-    dataUtils.roundNum++
     print('Dealing cards:')
     print(space)
     cardUtils.randomCardGen(2, dealer)
@@ -170,12 +171,13 @@ while (dataUtils.isGameActive) {
                 print(`Invalid resonse. Pick hit or stay`)
             }
         }
-
         // if player busts
         if (player[i].sum > 21) {
-            print('Bust!')
+            print('bust!')
             print(space)
-        }
+        } else if (player[i].sum === 21) {
+            print('bust!')
+        } 
     }
 
     //once all players finished drawing
@@ -191,10 +193,12 @@ while (dataUtils.isGameActive) {
         while (dealer.sum < 17) {
             cardUtils.randomCardGen(1, dealer)
             print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
-        } if (dealer.sum >= 17) {
+        } if (dealer.sum > 21) {
+            print('Dealer bust!')
+            print(space)
+        } else if (dealer.sum >= 17 && dealer.sum < 21) {
             print('The dealer stays')
         } else {
-            print('Dealer bust!')
             print(space)
         }
     }
