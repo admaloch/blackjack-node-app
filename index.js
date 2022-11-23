@@ -39,12 +39,12 @@ while (!dataUtils.isPlayerNumValid) {
 while (!dataUtils.isLeaveIntro) {
     print(space)
     let begin = '';
-    if(dataUtils.numPlayers > 1) {
+    if (dataUtils.numPlayers > 1) {
         begin = prompt(`Are all players ready to start the game? (Yes or No) `).trim().toLowerCase()
-    }else {
+    } else {
         begin = prompt(`Are you ready to start the game? (Yes or No) `).trim().toLowerCase()
     }
-    
+
     if (begin == 'yes' || begin == 'ya' || begin == 'y') {
         print(space)
         print('Type leave anytime to exit the table or quit to end the game');
@@ -81,7 +81,7 @@ while (dataUtils.isGameActive) {
         let betNotNum = ''
         print(`${player[i].name}:`)
         print(`Current bank: $${player[i].bank} -- Minimum bet: $${player[i].minBet}`)
-        player[i].bet = prompt(`Place your bet using any combination of the available chips (${dataUtils.betOptions}) `)
+        player[i].bet = prompt(`Place your bet using any combination of the available chips (${player[i].betOptions}) `)
 
         while (isBetValid !== true) {
             betNotNum = player[i].bet.trim().toLowerCase()
@@ -214,14 +214,16 @@ while (dataUtils.isGameActive) {
     }
     print(space)
 
+
+
     resultsUtils.roundResults()
     shuffleUtils.shuffle()
     betUtils.changeBetOptions()
     betUtils.setMinBet()
     resetUtils.handReset()
     bankUtils.isBankEmpty()
-
-
+    print(player[0].betOptions)
+    
 }
 
 
