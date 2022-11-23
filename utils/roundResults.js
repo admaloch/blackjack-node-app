@@ -46,7 +46,7 @@ const roundResults = () => {
         } //push
         else if (player[i].sum === dealer.sum) {
             print(`${player[i].name}'s sum: ${player[i].sum} -- Push`)
-            player[i].bank += player[i].bet * 2
+            player[i].bank += player[i].bet
         }//dealer wins
         else {
             print(`${player[i].name}'s sum: ${player[i].sum} -- The dealer won`)

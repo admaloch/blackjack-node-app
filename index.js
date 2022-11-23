@@ -38,7 +38,13 @@ while (!dataUtils.isPlayerNumValid) {
 //asks players to confirm start of the game
 while (!dataUtils.isLeaveIntro) {
     print(space)
-    let begin = prompt(`Are all players ready to start the game? (Yes or No) `).trim().toLowerCase()
+    let begin = '';
+    if(dataUtils.numPlayers > 1) {
+        begin = prompt(`Are all players ready to start the game? (Yes or No) `).trim().toLowerCase()
+    }else {
+        begin = prompt(`Are you ready to start the game? (Yes or No) `).trim().toLowerCase()
+    }
+    
     if (begin == 'yes' || begin == 'ya' || begin == 'y') {
         print(space)
         print('Type leave anytime to exit the table or quit to end the game');
@@ -118,7 +124,7 @@ while (dataUtils.isGameActive) {
     cardUtils.randomCardGen(2, dealer)
     print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
 
-    //see if player got a blackjack
+    //if player got a blackjack
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         cardUtils.randomCardGen(2, player[i])
         if (player[i].sum === 21) {
@@ -128,9 +134,7 @@ while (dataUtils.isGameActive) {
             print(`${player[i].name}'s hand: ${player[i].hand} -- Total: ${player[i].sum}`)
         }
     }
-
     print(space)
-
     // player move on if they didn't get a blackjack on first 2 cards
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         if (player[i].sum < 21) {
