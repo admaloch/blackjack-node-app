@@ -224,12 +224,13 @@ while (dataUtils.isGameActive) {
 
     resultsUtils.roundResults()
     bankUtils.isBankEmpty()
+    bankUtils.isGameOver()
     shuffleUtils.shuffle()
     betUtils.changeBetOptions()
     betUtils.setMinBet()
     resetUtils.handReset()
 
-
+    
 }
 
 

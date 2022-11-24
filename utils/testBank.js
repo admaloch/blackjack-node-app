@@ -1,5 +1,6 @@
 const dataUtils = require("./data")
 const print = require('./print')
+const endUtils = require("./endResults")
 
 // ends game when the player runs out of money :(
 function isBankEmpty() {
@@ -9,11 +10,18 @@ function isBankEmpty() {
             print(`${player[i].name} ran out of money and has left the table`)
             print('--------------------------------------------------')
             player[i].isPlayerActive = false
+            dataUtils.playerLeftTable.push(player[i])
         }
     }
+}
 
+function isGameOver() {
+    if (dataUtils.playerLeftTable.length === dataUtils.numPlayers) {
+        endUtils.endGameResults()
+        dataUtils.isGameActive = false;
+    }
 }
 
 
 
-module.exports = { isBankEmpty }
+module.exports = { isBankEmpty, isGameOver }
