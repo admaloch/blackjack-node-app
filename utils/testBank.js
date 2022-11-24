@@ -5,13 +5,13 @@ const print = require('./print')
 function isBankEmpty() {
     const player = dataUtils.playerHands
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
-        if (player[i].bank < 5) {
-            print(`${dataUtils.playerHands[i]} ran out of money and has left the table`)
-            dataUtils.playerLeftTable = [...dataUtils.playerLeftTable, ...dataUtils.playerHands.filter(x => x.name === player[i].name)]
-            dataUtils.playerHands = dataUtils.playerHands.filter(x => x.name !== player[i].name)
+        if (player[i].bank < 5 && player[i].isPlayerActive === true) {
+            print(`${player[i].name} ran out of money and has left the table`)
+            print('--------------------------------------------------')
+            player[i].isPlayerActive = false
         }
     }
-    print('--------------------------------------------------')
+
 }
 
 
