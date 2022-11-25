@@ -3,6 +3,7 @@ const cardUtils = require("./utils/cardGen")
 const shuffleUtils = require("./utils/shuffle")
 const dataUtils = require("./utils/data")
 const endUtils = require("./utils/endResults")
+const quitUtils = require("./utils/playerQuit")
 const betUtils = require("./utils/betOptions")
 const resetUtils = require("./utils/handReset")
 const bankUtils = require("./utils/testBank")
@@ -101,10 +102,9 @@ while (dataUtils.isGameActive) {
                 }
                 else {
                     if (betNotNum === 'quit' || betNotNum === 'q') {
-                        print('You left the table')
-                        endUtils.endGameResults()
+                        quitUtils.quitGame()
                         isBetValid = true
-                        break;
+
                     } else {
                         if (player[i].minBet === 5 && player[i].bet < 5) {
                             print('--- Bet amount is too low. $5 is the minimum bid')
@@ -123,24 +123,31 @@ while (dataUtils.isGameActive) {
         }
     }
 
-    print('Dealing cards:')
-    print(space)
-    cardUtils.randomCardGen(2, dealer)
-    print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
 
-    //2 cards are dealt to everyone-- only one of the dealers is shown
-    for (let i = 0; i < dataUtils.playerHands.length; i++) {
-        if (player[i].isPlayerActive === true) {
-            cardUtils.randomCardGen(2, player[i])
-            if (player[i].sum === 21) {
-                player[i].isBlackjack = true;
-                print(`${player[i].name}'s hand: ${player[i].hand} -- Blackjack!`)
-            } else {
-                print(`${player[i].name}'s hand: ${player[i].hand} -- Total: ${player[i].sum}`)
+    if (dataUtils.playerLeftTable.length !== dataUtils.numPlayers) {
+        print('Dealing cards:')
+        print(space)
+        cardUtils.randomCardGen(2, dealer)
+        print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
+    }
+
+    if (dataUtils.playerLeftTable.length !== dataUtils.numPlayers) {
+        //2 cards are dealt to everyone-- only one of the dealers is shown
+        for (let i = 0; i < dataUtils.playerHands.length; i++) {
+            if (player[i].isPlayerActive === true) {
+                cardUtils.randomCardGen(2, player[i])
+                if (player[i].sum === 21) {
+                    player[i].isBlackjack = true;
+                    print(`${player[i].name}'s hand: ${player[i].hand} -- Blackjack!`)
+                } else {
+                    print(`${player[i].name}'s hand: ${player[i].hand} -- Total: ${player[i].sum}`)
+                }
             }
         }
+        print(space)
     }
-    print(space)
+
+
     // player move on if they didn't get a blackjack on first 2 cards
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         if (player[i].sum < 21 && player[i].isPlayerActive === true) {
@@ -164,9 +171,7 @@ while (dataUtils.isGameActive) {
                     print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                     hitOrStay = 'stay'
                 } else if (doubleUp === 'quit' || doubleUp === 'q') {
-                    print('You have left the table')
-                    endUtils.endGameResults()
-                    break;
+                    quitUtils.quitGame()
                 } else {
                     hitOrStay = ''
                 }
@@ -180,9 +185,7 @@ while (dataUtils.isGameActive) {
                     cardUtils.randomCardGen(1, player[i])
                     print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                 } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
-                    print('You have left the table')
-                    endUtils.endGameResults()
-                    break;
+                    quitUtils.quitGame()
                 } else if (hitOrStay === 'stay' || hitOrStay === 's') {
                     print('You decided to stay')
                 } else {
@@ -199,32 +202,32 @@ while (dataUtils.isGameActive) {
         }
     }
 
-    //once all players finished drawing
     //The dealer now finishes hand
-    print(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
-    if (dealer.sum === 21) {
-        print(space)
-        print('Blackjack!')
-        dataUtils.dealerHand.isBlackJack = true;
-    } else {
-        while (dealer.sum < 17) {
-            cardUtils.randomCardGen(1, dealer)
-            print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
+    if (dataUtils.playerLeftTable.length !== dataUtils.numPlayers) {
+        print(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
+        if (dealer.sum === 21) {
+            print(space)
+            print('Blackjack!')
+            dataUtils.dealerHand.isBlackJack = true;
+        } else {
+            while (dealer.sum < 17) {
+                cardUtils.randomCardGen(1, dealer)
+                print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
+            }
         }
+        if (dealer.sum > 21) {
+            print('Dealer bust!')
+        } else if (dealer.sum >= 17 && dealer.sum < 21) {
+            print('The dealer stays')
+        } else {
+        }
+        print(space)
+        resultsUtils.roundResults()
+        bankUtils.isBankEmpty()
+        bankUtils.isGameOver()
+        shuffleUtils.shuffle()
+        betUtils.changeBetOptions()
+        betUtils.setMinBet()
+        resetUtils.handReset()
     }
-    if (dealer.sum > 21) {
-        print('Dealer bust!')
-    } else if (dealer.sum >= 17 && dealer.sum < 21) {
-        print('The dealer stays')
-    } else {
-    }
-    print(space)
-
-    resultsUtils.roundResults()
-    bankUtils.isBankEmpty()
-    bankUtils.isGameOver()
-    shuffleUtils.shuffle()
-    betUtils.changeBetOptions()
-    betUtils.setMinBet()
-    resetUtils.handReset()
 }

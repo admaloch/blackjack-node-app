@@ -1,7 +1,7 @@
 const dataUtils = require("./data")
 const print = require('./print')
 
-// displays final stats when player loses or leaves the table
+// displays final stats when game is over
 function endGameResults() {
     dataUtils.isGameActive = false;
     const player = dataUtils.playerHands
