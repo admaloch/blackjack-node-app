@@ -48,7 +48,7 @@ while (!dataUtils.isLeaveIntro) {
 
     if (begin == 'yes' || begin == 'ya' || begin == 'y') {
         print(space)
-        print('Type leave anytime to exit the table or quit to end the game');
+        print('Type leave anytime to leave the table or quit to end the game');
         print(space)
         print(`${dealer.name} has entered the table`)
         for (let i = 0; i < dataUtils.playerHands.length; i++) {
@@ -58,7 +58,7 @@ while (!dataUtils.isLeaveIntro) {
         print(space)
         dataUtils.isLeaveIntro = true;
         dataUtils.isGameActive = true;
-    } else if (begin == 'no' || begin == 'nope' || begin == 'n') {
+    } else if (begin == 'no' || begin == 'nope' || begin == 'n' || begin == 'quit' || begin == 'q') {
         print(space)
         print('Feel free to return and play again later')
         dataUtils.isLeaveIntro = true;
@@ -81,6 +81,7 @@ while (dataUtils.isGameActive) {
     // all players place bets-- checks to make sure bets are valid
     let isBetValid = false
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
+
         if (player[i].isPlayerActive === true) {
             isBetValid = false;
             let betNotNum = ''
@@ -105,6 +106,11 @@ while (dataUtils.isGameActive) {
                         quitUtils.quitGame()
                         isBetValid = true
 
+                    } else if (betNotNum === 'leave' || betNotNum === 'l') {
+                        print(`${player[i].name} left the table`)
+                        dataUtils.playerLeftTable.push(dataUtils.playerHands[i])
+                        player[i].isPlayerActive = false;
+                        isBetValid = true;
                     } else {
                         if (player[i].minBet === 5 && player[i].bet < 5) {
                             print('--- Bet amount is too low. $5 is the minimum bid')
@@ -172,6 +178,9 @@ while (dataUtils.isGameActive) {
                     hitOrStay = 'stay'
                 } else if (doubleUp === 'quit' || doubleUp === 'q') {
                     quitUtils.quitGame()
+                } else if (doubleUp === 'leave' || doubleUp === 'l') {
+                    print(`${player[i]} left the table`)
+                    dataUtils.playerLeftTable.push(dataUtils.playerHands[i])
                 } else {
                     hitOrStay = ''
                 }
@@ -186,6 +195,9 @@ while (dataUtils.isGameActive) {
                     print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                 } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
                     quitUtils.quitGame()
+                } else if (hitOrStay === 'leave' || hitOrStay === 'l') {
+                    print(`${player[i]} left the table`)
+                    dataUtils.playerLeftTable.push(dataUtils.playerHands[i])
                 } else if (hitOrStay === 'stay' || hitOrStay === 's') {
                     print('You decided to stay')
                 } else {
