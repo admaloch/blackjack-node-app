@@ -21,8 +21,6 @@ function endGameResults() {
         else print(`Money earned: $${gain}`)
         print(space)
     }
-    
-    
 }
 
 module.exports = { endGameResults }
