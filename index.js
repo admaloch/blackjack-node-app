@@ -123,7 +123,6 @@ while (dataUtils.isGameActive) {
         }
     }
 
-
     print('Dealing cards:')
     print(space)
     cardUtils.randomCardGen(2, dealer)
@@ -140,7 +139,6 @@ while (dataUtils.isGameActive) {
                 print(`${player[i].name}'s hand: ${player[i].hand} -- Total: ${player[i].sum}`)
             }
         }
-
     }
     print(space)
     // player move on if they didn't get a blackjack on first 2 cards
@@ -229,10 +227,4 @@ while (dataUtils.isGameActive) {
     betUtils.changeBetOptions()
     betUtils.setMinBet()
     resetUtils.handReset()
-
-    
 }
-
-
-
-

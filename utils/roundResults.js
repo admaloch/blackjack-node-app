@@ -21,7 +21,7 @@ const roundResults = () => {
             if (player[i].isBlackJack === true || dealer.isBlackJack === true) {
                 if (player[i].isBlackjack === true && dealer.isBlackJack === true) {
                     print(`${player[i].name}: Blackjack -- Push`)
-                    player[i].bank += player[i].bets
+                    player[i].bank += player[i].bet
                 } else if (player[i].isBlackjack === true && dealer.isBlackJack === false) {
                     print(`${player[i].name}: Blackjack -- ${player[i].name} wins!`)
                     player[i].bank += player[i].bet * 2.5
