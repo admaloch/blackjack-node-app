@@ -107,9 +107,8 @@ while (dataUtils.isGameActive) {
                         isBetValid = true
 
                     } else if (betNotNum === 'leave' || betNotNum === 'l') {
-                        print(`${player[i].name} left the table`)
-                        dataUtils.playerLeftTable.push(dataUtils.playerHands[i])
-                        player[i].isPlayerActive = false;
+                        quitUtils.playerLeftTable(player[i])
+                        bankUtils.isGameOver()
                         isBetValid = true;
                     } else {
                         if (player[i].minBet === 5 && player[i].bet < 5) {
@@ -179,16 +178,16 @@ while (dataUtils.isGameActive) {
                 } else if (doubleUp === 'quit' || doubleUp === 'q') {
                     quitUtils.quitGame()
                 } else if (doubleUp === 'leave' || doubleUp === 'l') {
-                    print(`${player[i]} left the table`)
-                    dataUtils.playerLeftTable.push(dataUtils.playerHands[i])
+                    quitUtils.playerLeftTable(player[i])
+                    bankUtils.isGameOver()
                 } else {
                     hitOrStay = ''
                 }
             }
 
             // loop option to hit or stay until player chooses stay or busts
-            while (hitOrStay !== 'stay' && hitOrStay !== 's' && hitOrStay !== 'quit' && hitOrStay !== 'q'
-                && player[i].sum < 21 && dataUtils.isGameActive !== false) {
+            while (hitOrStay !== 'stay' && hitOrStay !== 's' && hitOrStay !== 'quit' && hitOrStay !== 'q' && hitOrStay !== 'leave' && hitOrStay !== 'l'
+                && player[i].sum < 21) {
                 hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
                 if (hitOrStay === 'hit' || hitOrStay === 'h') {
                     cardUtils.randomCardGen(1, player[i])
@@ -196,8 +195,8 @@ while (dataUtils.isGameActive) {
                 } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
                     quitUtils.quitGame()
                 } else if (hitOrStay === 'leave' || hitOrStay === 'l') {
-                    print(`${player[i]} left the table`)
-                    dataUtils.playerLeftTable.push(dataUtils.playerHands[i])
+                    quitUtils.playerLeftTable(player[i])
+                    bankUtils.isGameOver()
                 } else if (hitOrStay === 'stay' || hitOrStay === 's') {
                     print('You decided to stay')
                 } else {
