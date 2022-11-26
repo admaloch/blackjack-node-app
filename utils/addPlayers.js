@@ -16,7 +16,8 @@ const addPlayers = () => {
             betDoubled: false,
             isPlayerActive: false,
             isBlackjack: false,
-            betOptions: ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
+            betOptions: ['$5', '$25', '$50', '$100', '$500', '$1000', 'All'],
+            roundsWon: 0,
         };
         let name = prompt(`Player ${i + 1}: Enter your name: `)
         name = name[0].toUpperCase() + name.slice(1).trim()

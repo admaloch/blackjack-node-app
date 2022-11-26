@@ -25,9 +25,10 @@ const roundResults = () => {
             } else if (player[i].isBlackjack === true && dealer.isBlackJack === false) {
                 print(`${player[i].name}: Blackjack! -- ${player[i].name} wins!`)
                 player[i].bank += player[i].bet * 2.5
+                player[i].roundsWon ++
             } else if (player[i].isBlackjack === false && dealer.isBlackJack === true) {
                 print(`${player[i].name}'s sum: ${player[i].sum} -- The dealer won`)
-            } else if (player[i].isBlackjack === false && player[i].sum > 21 && dealer.isBlackJack === true) {
+            } else if (player[i].sum > 21 && dealer.isBlackJack === true) {
                 print(`${player[i].name}'s sum: ${player[i].sum} -- ${player[i].name} bust -- The dealer won`)
             }
             //scenarios if player or dealer bust 
@@ -39,11 +40,13 @@ const roundResults = () => {
             } else if (player[i].sum <= 21 && dealer.sum > 21) {
                 print(`${player[i].name}'s sum: ${player[i].sum} -- ${player[i].name} won!`)
                 player[i].bank += player[i].bet * 2
+                player[i].roundsWon ++
             }
             //if neither player nor dealer bust 
             else if (player[i].sum > dealer.sum) {
                 print(`${player[i].name}'s sum: ${player[i].sum} -- ${player[i].name} won!`)
                 player[i].bank += player[i].bet * 2
+                player[i].roundsWon ++
             } else if (player[i].sum === dealer.sum) {
                 print(`${player[i].name}'s sum: ${player[i].sum} -- Push`)
                 player[i].bank += player[i].bet
