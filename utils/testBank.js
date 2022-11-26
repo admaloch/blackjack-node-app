@@ -2,7 +2,7 @@ const dataUtils = require("./data")
 const print = require('./print')
 const endUtils = require("./endResults")
 
-// ends game when the player runs out of money :(
+// when player leaves or runs out of money
 function isBankEmpty() {
     const player = dataUtils.playerHands
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
@@ -17,6 +17,7 @@ function isBankEmpty() {
 
 function isGameOver() {
     if (dataUtils.playerLeftTable.length === dataUtils.numPlayers) {
+        
         endUtils.endGameResults()
         dataUtils.isGameActive = false;
     }

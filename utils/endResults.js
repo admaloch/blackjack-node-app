@@ -6,7 +6,6 @@ function endGameResults() {
     dataUtils.isGameActive = false;
     const player = dataUtils.playerHands
     const space = '--------------------------------------------------'
-    print(space)
     print('Game results:')
     print(space)
     print(`Rounds played: ${dataUtils.roundNum}`)

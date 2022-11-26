@@ -6,7 +6,7 @@ const playerLeftTable = (player) =>{
     print(`${player.name} left the table`)
     dataUtils.playerLeftTable.push(player)
     player.isPlayerActive = false;
-    print('--------------------------------------------------')
+
 }
 
 // loops over players and changes isPlayerActive to false and adds to players left table array
