@@ -9,7 +9,7 @@ const playerLeftTable = (player) => {
     player.isPlayerActive = false;
 }
 
-// loops over players and changes isPlayerActive to false and adds to players left table array
+// loops over players and changes isPlayerActive to false and adds to inactive array
 const removePlayers = () => {
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         dataUtils.playerHands[i].isPlayerActive = false
@@ -18,6 +18,7 @@ const removePlayers = () => {
     }
 }
 
+//if a player quits the game -- entire game is done
 const quitGame = () => {
     print(space)
     print('You quit the game')

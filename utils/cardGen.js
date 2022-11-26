@@ -6,7 +6,7 @@ const testDeckUtils = require("./testDeck")
 // runs whenever cards are dealt
 // generates hands for players
 // updates hand info in the playerHands array
-//updates the cardUtils.dataUtils.cardPossibilities array
+//updates the cardPossibilities array
 function randomCardGen(numCards, player) {
     let emptyCardArray = testDeckUtils.isCardEmpty()
     let randomNums = []

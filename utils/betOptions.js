@@ -25,5 +25,4 @@ function setMinBet() {
         }
     }
 }
-
 module.exports = { changeBetOptions, setMinBet }

@@ -1,8 +1,9 @@
 const dataUtils = require("./data")
 const prompt = require('prompt-sync')()
+const player = dataUtils.playerHands
 
+//add players at beginning of game
 const addPlayers = () => {
-    const player = dataUtils.playerHands
     for (let i = 0; i < dataUtils.numPlayers; i++) {
         player[i] = {
             name: '',
@@ -22,5 +23,4 @@ const addPlayers = () => {
         player[i].name = name
     }
 }
-
 module.exports = { addPlayers }

@@ -4,6 +4,8 @@ let isPlayerNumValid = false;
 let isLeaveIntro = false;
 let isGameActive = false;
 const initCardAmount = 32;
+let playerHands = []
+let inactivePlayers = []
 
 let dealerHand = {
     name: 'The Dealer',
@@ -12,25 +14,6 @@ let dealerHand = {
     sum: 0,
     isBlackJack: false,
 }
-
-
-let playerHands = [
-    // {
-    //     name: '',
-    //     hand: [],
-    //     handValues: [],
-    //     sum: 0,
-    //     bank: 1000,
-    //     bet: 0,
-    //     minBet: 5,
-    //     betDoubled: false,
-    //     isPlayerActive: false,
-    //     isBlackjack: false,
-    //     betOptions: ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
-    // }
-]
-
-let inactivePlayers = []
 
 const cardPossibilities = [
     { cardName: 'Ace', cardValue: 11, numInDeck: 32 },
@@ -47,7 +30,4 @@ const cardPossibilities = [
     { cardName: 'Queen', cardValue: 10, numInDeck: 32 },
     { cardName: 'King', cardValue: 10, numInDeck: 32 },
 ]
-
-
-
 module.exports = { numPlayers, cardPossibilities, initCardAmount, playerHands, dealerHand, roundNum, isGameActive, isLeaveIntro, isPlayerNumValid, inactivePlayers }

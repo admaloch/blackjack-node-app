@@ -1,16 +1,15 @@
 const dataUtils = require("./data")
 const print = require('./print')
+dataUtils.isGameActive = false;
+const player = dataUtils.playerHands
+const space = '--------------------------------------------------'
 
 // displays final stats when game is over
 function endGameResults() {
-    dataUtils.isGameActive = false;
-    const player = dataUtils.playerHands
-    const space = '--------------------------------------------------'
     print('Game results:')
     print(space)
     print(`Rounds played: ${dataUtils.roundNum}`)
     print(space)
-
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         const loss = (1000 - player[i].bank);
         const gain = (player[i].bank - 1000);

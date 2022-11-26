@@ -15,7 +15,7 @@ function isBankEmpty() {
         }
     }
 }
-
+//tests if there are any active players left
 const isGameOver = () => {
     if (dataUtils.inactivePlayers.length === dataUtils.numPlayers) {
         print(space)

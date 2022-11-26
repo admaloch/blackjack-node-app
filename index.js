@@ -10,7 +10,6 @@ const hideDealerUtils = require("./utils/hideDealer")
 const addPlayersUtils = require('./utils/addPlayers')
 const prompt = require('prompt-sync')()
 const resultsUtils = require("./utils/roundResults")
-
 const player = dataUtils.playerHands
 const dealer = dataUtils.dealerHand
 
@@ -35,7 +34,6 @@ while (!dataUtils.isPlayerNumValid) {
         print('Invalid response. Make sure you pick between 1 and 5 players')
     }
 }
-
 //asks players to confirm start of the game
 while (!dataUtils.isLeaveIntro) {
     print(space)
@@ -45,7 +43,6 @@ while (!dataUtils.isLeaveIntro) {
     } else {
         begin = prompt(`Are you ready to start the game? (Yes or No) `).trim().toLowerCase()
     }
-
     if (begin == 'yes' || begin == 'ya' || begin == 'y') {
         print(space)
         print('Type leave anytime to leave the table or quit to end the game');
@@ -58,7 +55,7 @@ while (!dataUtils.isLeaveIntro) {
         print(space)
         dataUtils.isLeaveIntro = true;
         dataUtils.isGameActive = true;
-    } else if (begin == 'no' || begin == 'nope' || begin == 'n' || begin == 'quit' || begin == 'q') {
+    } else if (begin == 'no' || begin == 'n' || begin == 'quit' || begin == 'q') {
         print(space)
         print('Feel free to return and play again later')
         dataUtils.isLeaveIntro = true;
@@ -68,14 +65,12 @@ while (!dataUtils.isLeaveIntro) {
         print('Invalid response. Respond with (Yes or No)')
     }
 }
-
 // begin game. 
 //game active until all players run out of money, leave the table, or someone quits.
 while (dataUtils.isGameActive) {
     dataUtils.roundNum++
     print(`Begin round ${dataUtils.roundNum}`)
     print(space)
-
     // bet section
     let isBetValid = false
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
@@ -98,8 +93,7 @@ while (dataUtils.isGameActive) {
                     print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
                     print(space)
                     isBetValid = true
-                }
-                else {
+                } else {
                     if (betNotNum === 'quit' || betNotNum === 'q') {
                         quitUtils.quitGame()
                         isBetValid = true
@@ -126,14 +120,12 @@ while (dataUtils.isGameActive) {
             }
         }
     }
-
     if (dataUtils.inactivePlayers.length !== dataUtils.numPlayers) {
         print('Dealing cards:')
         print(space)
         cardUtils.randomCardGen(2, dealer)
         print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
     }
-
     //deal cards section
     //2 cards are dealt to everyone-- only one of the dealers is shown
     if (dataUtils.inactivePlayers.length !== dataUtils.numPlayers) {
@@ -150,7 +142,6 @@ while (dataUtils.isGameActive) {
         }
         print(space)
     }
-
     //Player round section
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         if (player[i].sum < 21 && player[i].isPlayerActive === true) {
@@ -158,7 +149,6 @@ while (dataUtils.isGameActive) {
             print(`${player[i].name}:`)
             print(`Hand: ${player[i].hand} -- Total: ${player[i].sum}`)
             print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
-
             // double up section
             if (player[i].bet <= player[i].bank) {
                 let doubleUp = prompt("Double up? (Yes or No) ").trim().toLowerCase()
@@ -189,7 +179,6 @@ while (dataUtils.isGameActive) {
             } else { 
                  playerCanHit = true
             }
-
             // hit or stay section
             if (playerCanHit === true) {
                 let playerIsDone = false
@@ -212,7 +201,6 @@ while (dataUtils.isGameActive) {
                         print(`Invalid resonse. Pick hit or stay`)
                     }
                 }
-
             }
             // if player >= 21
             if (player[i].sum > 21) {
@@ -223,7 +211,6 @@ while (dataUtils.isGameActive) {
             print(space)
         }
     }
-
     //dealer section
     if (dataUtils.inactivePlayers.length !== dataUtils.numPlayers) {
         print(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
@@ -236,8 +223,7 @@ while (dataUtils.isGameActive) {
                 cardUtils.randomCardGen(1, dealer)
                 print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
             }
-        }
-        if (dealer.sum > 21) {
+        } if (dealer.sum > 21) {
             print('Dealer bust!')
         } else if (dealer.sum >= 17 && dealer.sum < 21) {
             print('The dealer stays')
