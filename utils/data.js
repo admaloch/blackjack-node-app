@@ -30,7 +30,7 @@ let playerHands = [
     // }
 ]
 
-let playerLeftTable = []
+let inactivePlayers = []
 
 const cardPossibilities = [
     { cardName: 'Ace', cardValue: 11, numInDeck: 32 },
@@ -50,4 +50,4 @@ const cardPossibilities = [
 
 
 
-module.exports = { numPlayers, cardPossibilities, initCardAmount, playerHands, dealerHand, roundNum, isGameActive, isLeaveIntro, isPlayerNumValid, playerLeftTable }
+module.exports = { numPlayers, cardPossibilities, initCardAmount, playerHands, dealerHand, roundNum, isGameActive, isLeaveIntro, isPlayerNumValid, inactivePlayers }

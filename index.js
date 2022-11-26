@@ -2,7 +2,6 @@ const print = require('./utils/print')
 const cardUtils = require("./utils/cardGen")
 const shuffleUtils = require("./utils/shuffle")
 const dataUtils = require("./utils/data")
-const endUtils = require("./utils/endResults")
 const quitUtils = require("./utils/playerQuit")
 const betUtils = require("./utils/betOptions")
 const resetUtils = require("./utils/handReset")
@@ -77,7 +76,7 @@ while (dataUtils.isGameActive) {
     print(`Begin round ${dataUtils.roundNum}`)
     print(space)
 
-    // bets section
+    // bet section
     let isBetValid = false
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         //checks to make sure bets are valid
@@ -109,6 +108,7 @@ while (dataUtils.isGameActive) {
                         quitUtils.playerLeftTable(player[i])
                         bankUtils.isGameOver()
                         isBetValid = true;
+                        print(space)
                     } else {
                         if (player[i].minBet === 5 && player[i].bet < 5) {
                             print('--- Bet amount is too low. $5 is the minimum bid')
@@ -127,7 +127,7 @@ while (dataUtils.isGameActive) {
         }
     }
 
-    if (dataUtils.playerLeftTable.length !== dataUtils.numPlayers) {
+    if (dataUtils.inactivePlayers.length !== dataUtils.numPlayers) {
         print('Dealing cards:')
         print(space)
         cardUtils.randomCardGen(2, dealer)
@@ -136,7 +136,7 @@ while (dataUtils.isGameActive) {
 
     //deal cards section
     //2 cards are dealt to everyone-- only one of the dealers is shown
-    if (dataUtils.playerLeftTable.length !== dataUtils.numPlayers) {
+    if (dataUtils.inactivePlayers.length !== dataUtils.numPlayers) {
         for (let i = 0; i < dataUtils.playerHands.length; i++) {
             if (player[i].isPlayerActive === true) {
                 cardUtils.randomCardGen(2, player[i])
@@ -225,7 +225,7 @@ while (dataUtils.isGameActive) {
     }
 
     //dealer section
-    if (dataUtils.playerLeftTable.length !== dataUtils.numPlayers) {
+    if (dataUtils.inactivePlayers.length !== dataUtils.numPlayers) {
         print(`The dealer's hand: ${dealer.hand} -- Total: ${dealer.sum} `)
         if (dealer.sum === 21) {
             print(space)
@@ -247,11 +247,10 @@ while (dataUtils.isGameActive) {
     }
     //results section
     //run functions to test players hands/deck/reset etc..
-    if (dataUtils.playerLeftTable.length !== dataUtils.numPlayers) {
+    if (dataUtils.inactivePlayers.length !== dataUtils.numPlayers) {
         resultsUtils.roundResults()
         bankUtils.isBankEmpty()
         bankUtils.isGameOver()
-        
         betUtils.changeBetOptions()
         betUtils.setMinBet()
         resetUtils.handReset()
