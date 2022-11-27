@@ -1,8 +1,10 @@
 let numPlayers = 0;
-let roundNum = 0;
 let isPlayerNumValid = false;
+let roundNum = 0;
 let isLeaveIntro = false;
 let isGameActive = false;
+let isBetValid = false
+let betNotNum = ''
 const initCardAmount = 32;
 let playerHands = []
 let inactivePlayers = []
@@ -30,4 +32,4 @@ const cardPossibilities = [
     { cardName: 'Queen', cardValue: 10, numInDeck: 32 },
     { cardName: 'King', cardValue: 10, numInDeck: 32 },
 ]
-module.exports = { numPlayers, cardPossibilities, initCardAmount, playerHands, dealerHand, roundNum, isGameActive, isLeaveIntro, isPlayerNumValid, inactivePlayers }
+module.exports = { numPlayers, cardPossibilities, initCardAmount, playerHands, dealerHand, roundNum, isGameActive, isLeaveIntro, isPlayerNumValid, inactivePlayers, isBetValid, betNotNum }

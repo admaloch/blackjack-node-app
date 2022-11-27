@@ -19,9 +19,9 @@ const removePlayers = () => {
 }
 
 //if a player quits the game -- entire game is done
-const quitGame = () => {
+const quitGame = (player) => {
     print(space)
-    print('You quit the game')
+    print(`${player} quit the game`)
     print(space)
     removePlayers()
     endUtils.endGameResults()

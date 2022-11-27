@@ -6,9 +6,11 @@ function changeBetOptions() {
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         player[i].betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
         if (player[i].bank < 1000) {
-            player[i].betOptions = player[i].betOptions.map(x => parseInt(x.replace(/\D/g, "")))
-                .filter(x => x <= player[i].bank).map(x => '$' + x)
-            player[i].betOptions.push('All')
+            const strToNums = player[i].betOptions.map(x => parseInt(x.replace(/\D/g, "")))
+            const filterBank = strToNums.filter(x => x <= player[i].bank)
+            const returnToStr = filterBank.map(x => '$' + x)
+            returnToStr.push('All')
+            player[i].betOptions = returnToStr;
         }
     }
 }

@@ -5,7 +5,7 @@ function alterAceValue(player) {
             let lastIndex = player.handValues.lastIndexOf(11);
             player.handValues[lastIndex] = 1
             player.sum = player.handValues.reduce((p, c) => p + c)
-            if (player.handValues.includes(11) === false) break;
+            if (!player.handValues.includes(11)) break;
         }
     }
 }
