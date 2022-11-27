@@ -16,8 +16,8 @@ function endGameResults() {
         print(`${player[i].name}:`)
         print(`Bank: $${player[i].bank}`)
         print(`Rounds won: ${player[i].roundsWon}`)
-        if (player[i].bank <= 1000) print(`Money lost: $${loss}`)
-        else print(`Money earned: $${gain}`)
+        player[i].bank <= 1000 ? print(`Money lost: $${loss}`)
+            : print(`Money earned: $${gain}`)
         print(space)
     }
 }

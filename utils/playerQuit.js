@@ -14,7 +14,6 @@ const removePlayers = () => {
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
         dataUtils.playerHands[i].isPlayerActive = false
         dataUtils.inactivePlayers.push(dataUtils.playerHands[i])
-
     }
 }
 
@@ -27,6 +26,4 @@ const quitGame = (player) => {
     endUtils.endGameResults()
     dataUtils.isGameActive = false;
 }
-
-
 module.exports = { quitGame, playerLeftTable }
