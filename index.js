@@ -75,7 +75,6 @@ while (data.isGameActive) {
     for (let i = 0; i < data.playerHands.length; i++) {
         if (player[i].isPlayerActive === true) {
             data.isBetValid = false;
-
             print(`${player[i].name}:`)
             print(`Current bank: $${player[i].bank} -- Minimum bet: $${player[i].minBet}`)
             player[i].bet = prompt(`Place your bet using any combination of the available chips (${player[i].betOptions}) `)
@@ -201,11 +200,8 @@ while (data.isGameActive) {
                 }
             }
             // if player >= 21
-            if (player[i].sum > 21) {
-                print('Bust!')
-            } else if (player[i].sum === 21) {
-                print('Player stays')
-            }
+            if (player[i].sum > 21) print('Bust!')
+            else if (player[i].sum === 21) print('Player stays')
             print(space)
         }
     }
