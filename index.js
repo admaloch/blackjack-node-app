@@ -1,3 +1,4 @@
+const prompt = require('prompt-sync')()
 const print = require('./utils/print')
 const cardUtils = require("./utils/cardGen")
 const shuffleUtils = require("./utils/shuffle")
@@ -8,7 +9,6 @@ const resetUtils = require("./utils/handReset")
 const bankUtils = require("./utils/testBank")
 const hideDealerUtils = require("./utils/hideDealer")
 const addPlayersUtils = require('./utils/addPlayers')
-const prompt = require('prompt-sync')()
 const resultsUtils = require("./utils/roundResults")
 const player = data.playerHands
 const dealer = data.dealerHand
@@ -34,16 +34,16 @@ while (!data.isPlayerNumValid) {
         print('Invalid response. Make sure you pick between 1 and 5 players')
     }
 }
-//asks players to confirm start of the game
+//asks players if ready to start 
 while (!data.isLeaveIntro) {
     print(space)
     let begin = '';
     if (data.numPlayers > 1) {
-        begin = prompt(`Are all players ready to start the game? (Yes or No) `).trim().toLowerCase()
+        begin = prompt(`Are all players ready to enter the table? (Yes or No) `).trim().toLowerCase()
     } else {
-        begin = prompt(`Are you ready to start the game? (Yes or No) `).trim().toLowerCase()
+        begin = prompt(`Are you ready to enter the table? (Yes or No) `).trim().toLowerCase()
     }
-    if (begin == 'yes' || begin == 'ya' || begin == 'y') {
+    if (begin == 'yes' || begin == 'y') {
         print(space)
         print('Type leave anytime to leave the table or quit to end the game');
         print(space)
@@ -74,18 +74,15 @@ while (data.isGameActive) {
     // bet section
     for (let i = 0; i < data.playerHands.length; i++) {
         if (player[i].isPlayerActive === true) {
-            data.isBetValid = false;
             print(`${player[i].name}:`)
             print(`Current bank: $${player[i].bank} -- Minimum bet: $${player[i].minBet}`)
             player[i].bet = prompt(`Place your bet using any combination of the available chips (${player[i].betOptions}) `)
-
+            data.isBetValid = false;
             while (!data.isBetValid) {
                 data.betNotNum = player[i].bet.trim().toLowerCase()
                 player[i].bet = parseInt(player[i].bet.replace(/\D/g, ""))
                 if (player[i].bet % 5 === 0 && player[i].bet >= player[i].minBet && player[i].bet <= player[i].bank || data.betNotNum === 'all') {
-                    if (data.betNotNum === 'all') {
-                        player[i].bet = player[i].bank
-                    }
+                    if (data.betNotNum === 'all') {player[i].bet = player[i].bank}
                     player[i].bank -= player[i].bet
                     print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
                     print(space)
@@ -94,7 +91,6 @@ while (data.isGameActive) {
                     if (data.betNotNum === 'quit' || data.betNotNum === 'q') {
                         quitUtils.quitGame(player[i].name)
                         data.isBetValid = true
-
                     } else if (data.betNotNum === 'leave' || data.betNotNum === 'l') {
                         quitUtils.playerLeftTable(player[i])
                         bankUtils.isGameOver()
@@ -103,7 +99,6 @@ while (data.isGameActive) {
                     } else {
                         if (player[i].minBet === 5 && player[i].bet < 5) {
                             print('--- Bet amount is too low. $5 is the minimum bid')
-
                         } else if (player[i].minBet > 5 && player[i].bet < player[i].minBet) {
                             print(`--- Minimum bet: $${player[i].minBet}. Amount can't be lower than the bet from the previous round.`)
                         } else if (player[i].bet > player[i].bank) {
