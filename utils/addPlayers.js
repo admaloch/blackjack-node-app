@@ -23,5 +23,10 @@ const addPlayers = () => {
         name = name[0].toUpperCase() + name.slice(1).trim()
         player[i].name = name
     }
+  
+   
+
+    
 }
 module.exports = { addPlayers }
+

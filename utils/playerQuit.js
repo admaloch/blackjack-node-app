@@ -10,6 +10,7 @@ const playerLeftTable = (player) => {
     player.isPlayerActive = false;
 }
 
+
 // loops over players and changes isPlayerActive to false and adds to inactive array
 const removePlayers = () => {
     for (let i = 0; i < dataUtils.playerHands.length; i++) {
