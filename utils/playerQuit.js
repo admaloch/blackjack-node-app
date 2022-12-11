@@ -2,7 +2,7 @@ const dataUtils = require("./data")
 const endUtils = require("./endResults")
 const print = require('./print')
 const space = '--------------------------------------------------'
-const player = dataUtils.playerHands
+
 
 const playerLeftTable = (player) => {
     print(`${player.name} left the table`)
@@ -11,13 +11,15 @@ const playerLeftTable = (player) => {
 }
 
 
-// loops over players and changes isPlayerActive to false and adds to inactive array
-const removePlayers = () => {
-    for (let i = 0; i < dataUtils.playerHands.length; i++) {
+// loops over players and changes isPlayerActive to false and returns as an array
+const removePlayers = (player) => {
+    const removedPlayers = []
+    for (let i = 0; i < player.length; i++) {
         if (player[i].isPlayerActive) {
             player[i].isPlayerActive = false
-            dataUtils.inactivePlayers.push(player[i])
+            removedPlayers.push(player[i])
         }
+        return removedPlayers;
     }
 }
 
@@ -26,8 +28,7 @@ const quitGame = (player) => {
     print(space)
     print(`${player} quit the game`)
     print(space)
-    removePlayers()
-    endUtils.endGameResults()
-    dataUtils.isGameActive = false;
+    const printResults = endUtils.endGameResults()
+    return printResults
 }
-module.exports = { quitGame, playerLeftTable }
+module.exports = { quitGame, playerLeftTable, removePlayers }
