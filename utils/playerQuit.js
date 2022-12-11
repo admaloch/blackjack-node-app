@@ -6,8 +6,8 @@ const space = '--------------------------------------------------'
 
 const playerLeftTable = (player) => {
     print(`${player.name} left the table`)
-    dataUtils.inactivePlayers.push(player)
     player.isPlayerActive = false;
+    return player;
 }
 
 
@@ -23,12 +23,4 @@ const removePlayers = (player) => {
     }
 }
 
-//if a player quits the game -- entire game is done
-const quitGame = (player) => {
-    print(space)
-    print(`${player} quit the game`)
-    print(space)
-    const printResults = endUtils.endGameResults()
-    return printResults
-}
-module.exports = { quitGame, playerLeftTable, removePlayers }
+module.exports = { playerLeftTable, removePlayers }

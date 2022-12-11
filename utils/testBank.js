@@ -1,6 +1,6 @@
 const dataUtils = require("./data")
 const print = require('./print')
-const endUtils = require("./endResults")
+const printEndResults = require("./endResults")
 const space = '--------------------------------------------------'
 
 // when player leaves or runs out of money
@@ -16,13 +16,12 @@ function isBankEmpty() {
     }
 }
 //tests if there are any active players left
-const isGameOver = () => {
-    if (dataUtils.inactivePlayers.length === dataUtils.numPlayers) {
+const isGameOver = (inactivePlayers, numPlayers, isGameActive) => {
+    if (inactivePlayers.length === numPlayers) {
         print(space)
         print('All players have left the table')
         print(space)
-        endUtils.endGameResults()
-        dataUtils.isGameActive = false;
+       isGameActive = false;
     }
 }
 

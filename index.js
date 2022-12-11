@@ -2,8 +2,9 @@ const prompt = require('prompt-sync')()
 const print = require('./utils/print')
 const cardUtils = require("./utils/cardGen")
 const shuffleUtils = require("./utils/shuffle")
-const data = require("./utils/data")
+// const data = require("./utils/data")
 const quitUtils = require("./utils/playerQuit")
+const printEndResults = require("./utils/endResults")
 const betUtils = require("./utils/betOptions")
 const resetUtils = require("./utils/handReset")
 const bankUtils = require("./utils/testBank")
@@ -94,7 +95,7 @@ while (isGameActive) {
                 betNotNum = player[i].bet.trim().toLowerCase()
                 player[i].bet = parseInt(player[i].bet.replace(/\D/g, ""))
                 if (player[i].bet % 5 === 0 && player[i].bet >= player[i].minBet && player[i].bet <= player[i].bank || betNotNum === 'all') {
-                    if (betNotNum === 'all') {player[i].bet = player[i].bank}
+                    if (betNotNum === 'all') { player[i].bet = player[i].bank }
                     player[i].bank -= player[i].bet
                     print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
                     print(space)
@@ -102,12 +103,10 @@ while (isGameActive) {
                 } else {
                     if (betNotNum === 'quit' || betNotNum === 'q') {
                         inactivePlayers = quitUtils.removePlayers(player)
-                        print(quitUtils.quitGame(player[i].name))
                         isBetValid = true;
                         isGameActive = false;
                     } else if (betNotNum === 'leave' || betNotNum === 'l') {
-                        quitUtils.playerLeftTable(player[i])
-                        bankUtils.isGameOver()
+                        inactivePlayers.push(quitUtils.playerLeftTable(player[i]))
                         isBetValid = true;
                         print(space)
                     } else {
@@ -178,8 +177,7 @@ while (isGameActive) {
                         isGameActive = false
                     } else if (doubleUp === 'leave' || doubleUp === 'l') {
                         isDoubleUpValid = true;
-                        quitUtils.playerLeftTable(player[i])
-                        bankUtils.isGameOver()
+                        inactivePlayers.push(quitUtils.playerLeftTable(player[i]))
                     } else {
                         doubleUp = prompt("Invalid response. Pick (Yes or No) ")
                     }
@@ -198,13 +196,11 @@ while (isGameActive) {
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                     } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
                         inactivePlayers = quitUtils.removePlayers(player)
-                        print(quitUtils.quitGame(player[i].name))
                         playerIsDone = true
                         isGameActive = false
                     } else if (hitOrStay === 'leave' || hitOrStay === 'l') {
                         playerIsDone = true
-                        quitUtils.playerLeftTable(player[i])
-                        bankUtils.isGameOver()
+                        inactivePlayers.push(quitUtils.playerLeftTable(player[i]))
                     } else if (hitOrStay === 'stay' || hitOrStay === 's') {
                         print('You decided to stay')
                         playerIsDone = true
@@ -235,7 +231,7 @@ while (isGameActive) {
             print('Dealer bust!')
         } else if (dealer.sum >= 17 && dealer.sum < 21) {
             print('The dealer stays')
-        } 
+        }
         print(space)
     }
     //results section
@@ -243,10 +239,13 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         resultsUtils.roundResults()
         bankUtils.isBankEmpty()
-        bankUtils.isGameOver()
+        bankUtils.isGameOver(inactivePlayers, numPlayers, isGameActive)
         betUtils.changeBetOptions()
         betUtils.setMinBet()
         resetUtils.handReset()
         shuffleUtils.shuffle()
+    }
+    if (inactivePlayers.length === numPlayers) {
+        printEndResults.endGameResults(player, roundNum)
     }
 }

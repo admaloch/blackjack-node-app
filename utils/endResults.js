@@ -5,12 +5,12 @@ const player = dataUtils.playerHands
 const space = '--------------------------------------------------'
 
 // displays final stats when game is over
-function endGameResults() {
+function endGameResults(player, roundNum) {
     print('Game results:')
     print(space)
-    print(`Total rounds played: ${dataUtils.roundNum}`)
+    print(`Total rounds played: ${roundNum}`)
     print(space)
-    for (let i = 0; i < dataUtils.playerHands.length; i++) {
+    for (let i = 0; i < player.length; i++) {
         const loss = (1000 - player[i].bank);
         const gain = (player[i].bank - 1000);
         print(`${player[i].name}:`)
