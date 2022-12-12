@@ -8,6 +8,7 @@ function alterAceValue(player) {
             if (!player.handValues.includes(11)) break;
         }
     }
+    return player
 }
 module.exports = {alterAceValue}
 

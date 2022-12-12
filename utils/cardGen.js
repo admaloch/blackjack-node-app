@@ -1,29 +1,26 @@
 const dataUtils = require("./data")
 
-// runs whenever cards are dealt
-function randomCardGen(numCards) {
-    let emptyCardArray = isCardEmpty()
-    let randonNums = []
-    for (let i = 0; i < numCards; i++) {
-        emptyCardArray.length === 0
-            ? randonNums.push(Math.floor(Math.random() * 13) + 1)
-            : randonNums.push(randomExcluded(emptyCardArray))
-    }
-    return randonNums;
+//generates a random arry based on number input
+const genCards = (numCards) => {
+    const randomNumArr = randomNums(numCards)
+    const cardNames = randomNumArr.map(nums => dataUtils.cardPossibilities[nums - 1].cardName)
+    return cardNames;
 }
 
-const cardNames = (randomNums) => {
-   return randomNums.map(nums => dataUtils.cardPossibilities[nums - 1].cardName)
-} 
+//returns an array of random nums from 1-13 based on user numCards input and wether any cards are empty
+const randomNums = (numcards) => {
+    let emptyCardArray = testForEmptyCards()
+    let randomNums = []
+    for (let i = 0; i < numCards; i++) {
+        emptyCardArray.length === 0
+            ? randomNums.push(Math.floor(Math.random() * 13) + 1)
+            : randomNums.push(randomExcluded(emptyCardArray))
+    }
+    return randomNums;
+}
 
-const cardValues = (randomNums) => {
-    return randomNums.map(nums => dataUtils.cardPossibilities[nums - 1].cardValue)
-} 
-
-const cardSum = () => cardValues.reduce((p, c) => p + c)
-
-// test if card is empty and add to an array
-function isCardEmpty() {
+// test for and generates an array of empty cards from the main deck
+function testForEmptyCards() {
     const addDeckIndex = dataUtils.cardPossibilities.map((obj, i) => Object.assign(obj, { index: i }))
     const filterEmptyCards = addDeckIndex.filter(x => x.numInDeck == 0)
     const mapEmptyCards = filterEmptyCards.map(y => (y.index + 1))
@@ -41,12 +38,13 @@ function randomExcluded(exclude) {
     return nums[randomIndex];
 }
 
-// subtract the cards that get delt from the deck
-const removeCardsFromDeck = (deck) => {
-    return deck.filter(item => cardNames().includes(item.cardName))
-        .forEach(x => x.numInDeck -= 1)
-}
 
 
 
-module.exports = { randomCardGen, cardNames, cardValues, cardSum, removeCardsFromDeck }
+
+
+
+
+
+
+module.exports = { genCards }
