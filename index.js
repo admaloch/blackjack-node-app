@@ -266,20 +266,26 @@ while (isGameActive) {
 
     //results section
     //run functions to test players hands/deck/reset etc..
-    for (let i = 0; i < player.length; i++) {
-        if (player[i].isPlayerActive) {
-            player[i] = resultsUtils.roundResults(player[i])
-            bankUtils.isBankEmpty(player[i])
-            betUtils.changeBetOptions(player[i])
-            betUtils.setMinBet(player[i])
-            resetUtils.handReset()
+    if (inactivePlayers.length !== numPlayers) {
+        for (let i = 0; i < player.length; i++) {
+            if (player[i].isPlayerActive) {
+                player[i] = resultsUtils.roundResults(player[i])
+                player[i].isPlayerActive = bankUtils.isBankEmpty(player[i])
+                player[i].betOptions = betUtils.changeBetOptions(player[i])
+                player[i].minBet = betUtils.setMinBet(player[i])
+                player[i] = resetUtils.handReset(player[i])
+                if (!player[i].isPlayerActive) inactivePlayers.push(player[i])
+            }
         }
+        data.cardPossibilities = shuffleUtils.shuffle(data.cardPossibilities)
+        isGameActive = bankUtils.isGameOver(inactivePlayers, numPlayers)
     }
 
-    shuffleUtils.shuffle()
-    bankUtils.isGameOver(inactivePlayers, numPlayers, isGameActive)
-
     if (inactivePlayers.length === numPlayers) {
+        print(space)
+        print('All players have left the table')
+        print(space)
+        isGameActive = false;
         printEndResults.endGameResults(player, roundNum)
     }
 }

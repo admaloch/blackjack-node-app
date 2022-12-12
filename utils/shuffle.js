@@ -1,15 +1,15 @@
 const print = require('./print')
 const dataUtils = require("./data")
-
-// reset card amount in card possibilities array once 1/2 of deck used
-function shuffle() {
-    const space = '--------------------------------------------------'
-    const sum = dataUtils.cardPossibilities.map(x => x.numInDeck).reduce((p, c) => p + c)
-    //8 decks of cards = 416 cards. 416/2 = 208.. shuffle when it gets 1/2 through
+const space = '--------------------------------------------------'
+//8 decks of cards = 416 cards. 416/2 = 208.. shuffle when it gets 1/2 through
+function shuffle(deck) {
+    const initCardAmount = 32;
+    const sum = deck.map(x => x.numInDeck).reduce((p, c) => p + c)
     if (sum < 208) {
-        dataUtils.cardPossibilities.forEach(cards => cards.numInDeck = dataUtils.initCardAmount)
+        deck.forEach(cards => cards.numInDeck = initCardAmount)
         print('Deck is being shuffled')
         print(space)
     }
+    return deck
 }
 module.exports = {shuffle}

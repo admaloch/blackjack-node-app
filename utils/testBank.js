@@ -4,23 +4,21 @@ const space = '--------------------------------------------------'
 
 // when player leaves or runs out of money
 function isBankEmpty(player) {
-    
-    for (let i = 0; i < player.length; i++) {
-        if (player[i].bank < 5 && player[i].isPlayerActive === true) {
-            print(`${player[i].name} ran out of money and has left the table`)
-            print(space)
-            player[i].isPlayerActive = false
-            dataUtils.inactivePlayers.push(player[i])
-        }
+    const newPlayerObj = player
+    if (player.bank < 5) {
+        print(`${player.name} ran out of money and has left the table`)
+        print(space)
     }
+    return false;
 }
+
 //tests if there are any active players left
-const isGameOver = (inactivePlayers, numPlayers, isGameActive) => {
+const isGameOver = (inactivePlayers, numPlayers) => {
     if (inactivePlayers.length === numPlayers) {
         print(space)
         print('All players have left the table')
         print(space)
-       isGameActive = false;
+        return false;
     }
 }
 

@@ -5,7 +5,7 @@ const player = dataUtils.playerHands
 const dealer = dataUtils.dealerHand
 
 const roundResults = (player) => {
-    const newPlayerObject = player;
+
     
         //scenarios if player or dealer get blackjack
         if (player.isBlackjack && dealer.isBlackJack) {
@@ -45,7 +45,7 @@ const roundResults = (player) => {
             print(`${player.name}'s sum: ${player.sum} -- The dealer won`)
         }
     print(space)
-    return newPlayerObject;
+    return updatedPlayer;
 }
 
 module.exports = { roundResults }

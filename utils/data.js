@@ -1,21 +1,4 @@
-// let numPlayers = 0;
-// let isPlayerNumValid = false;
-// let roundNum = 0;
-// let isLeaveIntro = false;
-// let isGameActive = false;
-// let isBetValid = false
-// let betNotNum = ''
-const initCardAmount = 32;
-// let playerHands = []
-// let inactivePlayers = []
 
-// let dealer = {
-//     name: 'The Dealer',
-//     hand: [],
-//     handValues: [],
-//     sum: 0,
-//     isBlackJack: false,
-// }
 
 const cardPossibilities = [
     { cardName: 'Ace', cardValue: 11, numInDeck: 32 },
@@ -32,4 +15,4 @@ const cardPossibilities = [
     { cardName: 'Queen', cardValue: 10, numInDeck: 32 },
     { cardName: 'King', cardValue: 10, numInDeck: 32 },
 ]
-module.exports = { cardPossibilities, initCardAmount }
+module.exports = { cardPossibilities }
