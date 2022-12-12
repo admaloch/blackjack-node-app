@@ -250,17 +250,35 @@ while (isGameActive) {
         }
         print(space)
     }
+
+    if (inactivePlayers.length !== numPlayers) {
+        print(`Round ${dataUtils.roundNum} results: `)
+        print(space)
+        if (dealer.isBlackJack) {
+            print(`Dealer: Blackjack`)
+        } else if (dealer.sum > 21) {
+            print('Dealer bust')
+        } else {
+            print(`Dealer sum: ${dealer.sum}`)
+        }
+        print(space)
+    }
+
     //results section
     //run functions to test players hands/deck/reset etc..
-    if (inactivePlayers.length !== numPlayers) {
-        resultsUtils.roundResults()
-        bankUtils.isBankEmpty()
-        bankUtils.isGameOver(inactivePlayers, numPlayers, isGameActive)
-        betUtils.changeBetOptions()
-        betUtils.setMinBet()
-        resetUtils.handReset()
-        shuffleUtils.shuffle()
+    for (let i = 0; i < player.length; i++) {
+        if (player[i].isPlayerActive) {
+            player[i] = resultsUtils.roundResults(player[i])
+            bankUtils.isBankEmpty(player[i])
+            betUtils.changeBetOptions(player[i])
+            betUtils.setMinBet(player[i])
+            resetUtils.handReset()
+        }
     }
+
+    shuffleUtils.shuffle()
+    bankUtils.isGameOver(inactivePlayers, numPlayers, isGameActive)
+
     if (inactivePlayers.length === numPlayers) {
         printEndResults.endGameResults(player, roundNum)
     }

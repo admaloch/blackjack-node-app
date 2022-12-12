@@ -1,7 +1,6 @@
-const dataUtils = require("./data")
-const endUtils = require("./endResults")
+
 const print = require('./print')
-const space = '--------------------------------------------------'
+
 
 
 const playerLeftTable = (player) => {
