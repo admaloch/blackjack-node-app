@@ -2,7 +2,7 @@ const prompt = require('prompt-sync')()
 const print = require('./utils/print')
 const cardUtils = require("./utils/cardGen")
 const shuffleUtils = require("./utils/shuffle")
-// const data = require("./utils/data")
+const data = require("./utils/data")
 const quitUtils = require("./utils/playerQuit")
 const printEndResults = require("./utils/endResults")
 const betUtils = require("./utils/betOptions")
@@ -128,7 +128,13 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         print('Dealing cards:')
         print(space)
-        cardUtils.randomCardGen(2, dealer)
+        const randomNums = cardUtils.randomCardGen(2)
+        const cardNames = cardUtils.cardNames(randomNums)
+        const cardValues = cardUtils.cardNames(randomNums)
+        dealer.hand = [...dealer.hand, ...cardNames]
+        dealer.handValues = [...dealer.handValues, ...cardValues]
+        dealer.sum = dealer.sum += cardUtils.cardSum()
+        data.cardPossibilities = cardUtils.removeCardsFromDeck(data.cardPossibilities)
         print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
     }
     //deal cards section

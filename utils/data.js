@@ -7,7 +7,7 @@
 // let betNotNum = ''
 const initCardAmount = 32;
 // let playerHands = []
-let inactivePlayers = []
+// let inactivePlayers = []
 
 // let dealer = {
 //     name: 'The Dealer',
@@ -32,4 +32,4 @@ const cardPossibilities = [
     { cardName: 'Queen', cardValue: 10, numInDeck: 32 },
     { cardName: 'King', cardValue: 10, numInDeck: 32 },
 ]
-module.exports = { cardPossibilities, initCardAmount, playerHands, inactivePlayers }
+module.exports = { cardPossibilities, initCardAmount }

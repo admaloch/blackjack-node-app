@@ -1,24 +1,52 @@
 const dataUtils = require("./data")
-const numsUtils = require("./genNums")
-const aceUtils = require("./alterAce")
-const testDeckUtils = require("./testDeck")
 
 // runs whenever cards are dealt
-// generates hands for players
-// updates hand info in the playerHands array
-//updates the cardPossibilities array
-function randomCardGen(numCards, player) {
-    let emptyCardArray = testDeckUtils.isCardEmpty()
-    let randomNums = []
-    numsUtils.genRandomNums(numCards, emptyCardArray, randomNums)
-    let cardNames = randomNums.map(nums => dataUtils.cardPossibilities[nums - 1].cardName)
-    let cardValues = randomNums.map(nums => dataUtils.cardPossibilities[nums - 1].cardValue)
-    let cardSum = cardValues.reduce((p, c) => p + c)
-    player.hand = [...player.hand, ...cardNames]
-    player.handValues = [...player.handValues, ...cardValues]
-    player.sum = player.sum += cardSum
-    testDeckUtils.removeFromDeck(cardNames)
-    aceUtils.alterAceValue(player)
+function randomCardGen(numCards) {
+    let emptyCardArray = isCardEmpty()
+    let randonNums = []
+    for (let i = 0; i < numCards; i++) {
+        emptyCardArray.length === 0
+            ? randonNums.push(Math.floor(Math.random() * 13) + 1)
+            : randonNums.push(randomExcluded(emptyCardArray))
+    }
+    return randonNums;
 }
 
-module.exports = { randomCardGen }
+const cardNames = (randomNums) => {
+   return randomNums.map(nums => dataUtils.cardPossibilities[nums - 1].cardName)
+} 
+
+const cardValues = (randomNums) => {
+    return randomNums.map(nums => dataUtils.cardPossibilities[nums - 1].cardValue)
+} 
+
+const cardSum = () => cardValues.reduce((p, c) => p + c)
+
+// test if card is empty and add to an array
+function isCardEmpty() {
+    const addDeckIndex = dataUtils.cardPossibilities.map((obj, i) => Object.assign(obj, { index: i }))
+    const filterEmptyCards = addDeckIndex.filter(x => x.numInDeck == 0)
+    const mapEmptyCards = filterEmptyCards.map(y => (y.index + 1))
+    return mapEmptyCards
+}
+
+//takes an array of numbers and gens random num that excludes them
+function randomExcluded(exclude) {
+    const nums = [];
+    for (let i = 1; i <= 13; i++) {
+        if (!exclude.includes(i)) nums.push(i);
+    }
+    if (nums.length === 0) return false;
+    const randomIndex = Math.floor(Math.random() * nums.length);
+    return nums[randomIndex];
+}
+
+// subtract the cards that get delt from the deck
+const removeCardsFromDeck = (deck) => {
+    return deck.filter(item => cardNames().includes(item.cardName))
+        .forEach(x => x.numInDeck -= 1)
+}
+
+
+
+module.exports = { randomCardGen, cardNames, cardValues, cardSum, removeCardsFromDeck }
