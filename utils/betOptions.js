@@ -1,18 +1,14 @@
-const dataUtils = require("./data")
-const player = dataUtils.playerHands
 
 // updates bet options based on amount in players bank
 function changeBetOptions(player) {
-
-    const newBetOptions = []
-    player.betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
+    let betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
     if (player.bank < 1000) {
-        const strToNums = player.betOptions.map(x => parseInt(x.replace(/\D/g, "")))
+        const strToNums = betOptions.map(x => parseInt(x.replace(/\D/g, "")))
         const filterBank = strToNums.filter(x => x <= player.bank)
-        newBetOptions = filterBank.map(x => '$' + x)
-        newBetOptions.push('All')
+        betOptions = filterBank.map(x => '$' + x)
+        betOptions.push('All')
     }
-    return newBetOptions
+    return betOptions
 }
 
 // updates min bet for player based on previous bet/amount in bank

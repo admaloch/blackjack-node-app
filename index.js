@@ -3,7 +3,7 @@ const print = require('./utils/print')
 const cardUtils = require("./utils/cardGen")
 const updatePlayerUtils = require("./utils/updatePlayer")
 const removeCardsUtils = require("./utils/removeCards")
-const shuffleUtils = require("./utils/shuffle")
+// const shuffleUtils = require("./utils/shuffle")
 const data = require("./utils/data")
 const quitUtils = require("./utils/playerQuit")
 const printEndResults = require("./utils/endResults")
@@ -13,32 +13,10 @@ const bankUtils = require("./utils/testBank")
 const hideDealerUtils = require("./utils/hideDealer")
 const addPlayersUtils = require('./utils/addPlayers')
 const resultsUtils = require("./utils/roundResults")
-// const dealer = require("./utils/dealer")
 const alterAceUtils = require('./utils/alterAce')
-// const player = data.playerHands
-// const data.dealer = data.data.dealer
-
-// let cardPossibilities = [
-//     { cardName: 'Ace', cardValue: 11, numInDeck: 32 },
-//     { cardName: '2', cardValue: 2, numInDeck: 32 },
-//     { cardName: '3', cardValue: 3, numInDeck: 32 },
-//     { cardName: '4', cardValue: 4, numInDeck: 32 },
-//     { cardName: '5', cardValue: 5, numInDeck: 32 },
-//     { cardName: '6', cardValue: 6, numInDeck: 32 },
-//     { cardName: '7', cardValue: 7, numInDeck: 32 },
-//     { cardName: '8', cardValue: 8, numInDeck: 32 },
-//     { cardName: '9', cardValue: 9, numInDeck: 32 },
-//     { cardName: '10', cardValue: 10, numInDeck: 32 },
-//     { cardName: 'Jack', cardValue: 10, numInDeck: 32 },
-//     { cardName: 'Queen', cardValue: 10, numInDeck: 32 },
-//     { cardName: 'King', cardValue: 10, numInDeck: 32 },
-// ]
 
 let mainDeck = data.cardPossibilities;
-
-// console.log(mainDeck)
-// print(data.cardPossibilities)
-
+// const initCardAmount = 4;
 let player = []
 let inactivePlayers = []
 let dealer = {
@@ -296,7 +274,7 @@ while (isGameActive) {
         }
         print(space)
     }
-
+    
     //results section
     //run functions to test players hands/deck/reset etc..
     if (inactivePlayers.length !== numPlayers) {
@@ -309,10 +287,15 @@ while (isGameActive) {
                 player[i] = resetUtils.handReset(player[i])
                 if (!player[i].isPlayerActive) inactivePlayers.push(player[i])
             }
+
         }
-        mainDeck = shuffleUtils.shuffle(mainDeck)
-        isGameActive = bankUtils.isGameOver(inactivePlayers, numPlayers)
+        dealer = resetUtils.handReset(dealer)
+        // mainDeck = shuffleUtils.shuffle(mainDeck, initCardAmount)
     }
+
+    console.log(mainDeck)
+
+
 
     if (inactivePlayers.length === numPlayers) {
         print(space)
