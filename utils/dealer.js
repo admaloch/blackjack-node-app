@@ -8,4 +8,4 @@ let dealer = {
     isBlackJack: false,
 }
 
-module.exports = dealer
+module.exports = {dealer}

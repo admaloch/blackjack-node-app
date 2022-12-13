@@ -13,13 +13,41 @@ const bankUtils = require("./utils/testBank")
 const hideDealerUtils = require("./utils/hideDealer")
 const addPlayersUtils = require('./utils/addPlayers')
 const resultsUtils = require("./utils/roundResults")
-const dealer = require("./utils/dealer")
+// const dealer = require("./utils/dealer")
 const alterAceUtils = require('./utils/alterAce')
 // const player = data.playerHands
 // const data.dealer = data.data.dealer
 
+// let cardPossibilities = [
+//     { cardName: 'Ace', cardValue: 11, numInDeck: 32 },
+//     { cardName: '2', cardValue: 2, numInDeck: 32 },
+//     { cardName: '3', cardValue: 3, numInDeck: 32 },
+//     { cardName: '4', cardValue: 4, numInDeck: 32 },
+//     { cardName: '5', cardValue: 5, numInDeck: 32 },
+//     { cardName: '6', cardValue: 6, numInDeck: 32 },
+//     { cardName: '7', cardValue: 7, numInDeck: 32 },
+//     { cardName: '8', cardValue: 8, numInDeck: 32 },
+//     { cardName: '9', cardValue: 9, numInDeck: 32 },
+//     { cardName: '10', cardValue: 10, numInDeck: 32 },
+//     { cardName: 'Jack', cardValue: 10, numInDeck: 32 },
+//     { cardName: 'Queen', cardValue: 10, numInDeck: 32 },
+//     { cardName: 'King', cardValue: 10, numInDeck: 32 },
+// ]
+
+let mainDeck = data.cardPossibilities;
+
+// console.log(mainDeck)
+// print(data.cardPossibilities)
+
 let player = []
 let inactivePlayers = []
+let dealer = {
+    name: 'The Dealer',
+    hand: [],
+    handValues: [],
+    sum: 0,
+    isBlackJack: false,
+}
 
 // Begin game
 const space = '--------------------------------------------------'
@@ -132,18 +160,20 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         print('Dealing cards:')
         print(space)
-        const newCardsArr = cardUtils.genCards(2)
-        dealer = updatePlayerUtils.updatePlayerObj(newCardsArr, dealer)
-        data.cardPossibilities = removeCardsUtils.removeFromDeck(data.cardPossibilities, newCardsArr)
+        const randomNums = cardUtils.genCards(2)
+        const cardNames = updatePlayerUtils.genCardNames(randomNums)
+        dealer = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, dealer)
+        mainDeck = removeCardsUtils.removeFromDeck(cardNames)
         print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
     }
     //players draw 2 cards
     if (inactivePlayers.length !== numPlayers) {
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive === true) {
-                const newCardsArr = cardUtils.genCards(2)
-                player[i] = updatePlayerUtils.updatePlayerObj(newCardsArr, player[i])
-                data.cardPossibilities = removeCardsUtils.removeFromDeck(data.cardPossibilities, newCardsArr)
+                const randomNums = cardUtils.genCards(2)
+                const cardNames = updatePlayerUtils.genCardNames(randomNums)
+                player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
+                mainDeck = removeCardsUtils.removeFromDeck(cardNames)
                 if (player[i].sum === 21) {
                     player[i].isBlackjack = true;
                     print(`${player[i].name}'s hand: ${player[i].hand} -- Blackjack!`)
@@ -171,9 +201,10 @@ while (isGameActive) {
                         player[i].bank -= player[i].bet
                         player[i].bet = player[i].bet * 2
                         print(`Doubled bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
-                        const newCardsArr = cardUtils.genCards(1)
-                        player[i] = updatePlayerUtils.updatePlayerObj(newCardsArr, player[i])
-                        data.cardPossibilities = removeCardsUtils.removeFromDeck(data.cardPossibilities, newCardsArr)
+                        const randomNums = cardUtils.genCards(1)
+                        const cardNames = updatePlayerUtils.genCardNames(randomNums)
+                        player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
+                        mainDeck = removeCardsUtils.removeFromDeck(cardNames)
                         player[i] = alterAceUtils.alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                         isDoubleUpValid = true;
@@ -202,9 +233,10 @@ while (isGameActive) {
                 while (playerIsDone === false && player[i].sum < 21) {
                     hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
                     if (hitOrStay === 'hit' || hitOrStay === 'h') {
-                        const newCardsArr = cardUtils.genCards(1)
-                        player[i] = updatePlayerUtils.updatePlayerObj(newCardsArr, player[i])
-                        data.cardPossibilities = removeCardsUtils.removeFromDeck(data.cardPossibilities, newCardsArr)
+                        const randomNums = cardUtils.genCards(1)
+                        const cardNames = updatePlayerUtils.genCardNames(randomNums)
+                        player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
+                        mainDeck = removeCardsUtils.removeFromDeck(cardNames)
                         player[i] = alterAceUtils.alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                     } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
@@ -237,9 +269,10 @@ while (isGameActive) {
             dealer.isBlackJack = true;
         } else {
             while (dealer.sum < 17) {
-                const newCardsArr = cardUtils.genCards(1)
-                dealer = updatePlayerUtils.updatePlayerObj(newCardsArr, dealer)
-                data.cardPossibilities = removeCardsUtils.removeFromDeck(data.cardPossibilities, newCardsArr)
+                const randomNums = cardUtils.genCards(1)
+                const cardNames = updatePlayerUtils.genCardNames(randomNums)
+                dealer = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, dealer)
+                mainDeck = removeCardsUtils.removeFromDeck(cardNames)
                 dealer = alterAceUtils.alterAceValue(dealer)
                 print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
             }
@@ -252,7 +285,7 @@ while (isGameActive) {
     }
 
     if (inactivePlayers.length !== numPlayers) {
-        print(`Round ${dataUtils.roundNum} results: `)
+        print(`Round ${roundNum} results: `)
         print(space)
         if (dealer.isBlackJack) {
             print(`Dealer: Blackjack`)
@@ -269,7 +302,7 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive) {
-                player[i] = resultsUtils.roundResults(player[i])
+                player[i] = resultsUtils.roundResults(player[i], dealer)
                 player[i].isPlayerActive = bankUtils.isBankEmpty(player[i])
                 player[i].betOptions = betUtils.changeBetOptions(player[i])
                 player[i].minBet = betUtils.setMinBet(player[i])
@@ -277,7 +310,7 @@ while (isGameActive) {
                 if (!player[i].isPlayerActive) inactivePlayers.push(player[i])
             }
         }
-        data.cardPossibilities = shuffleUtils.shuffle(data.cardPossibilities)
+        mainDeck = shuffleUtils.shuffle(mainDeck)
         isGameActive = bankUtils.isGameOver(inactivePlayers, numPlayers)
     }
 

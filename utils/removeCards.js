@@ -1,9 +1,13 @@
 const dataUtils = require("./data")
 
+
 // subtract the cards that get delt from the deck
-const removeFromDeck = (deck, cardNames) => {
-    return deck.filter(item => cardNames.includes(item.cardName))
-        .forEach(x => x.numInDeck -= 1)
+const removeFromDeck = (cardNames) => {
+    const updatedDeck = dataUtils.cardPossibilities
+    updatedDeck.forEach(a =>
+        cardNames.forEach(b =>
+            a.cardName === b ? a.numInDeck-- : a))
+    return updatedDeck
 }
 
-module.exports = {removeFromDeck} 
+module.exports = { removeFromDeck } 

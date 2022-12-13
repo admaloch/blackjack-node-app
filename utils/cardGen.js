@@ -1,14 +1,9 @@
 const dataUtils = require("./data")
 
+let cardDeck = dataUtils.cardPossibilities;
+
 //generates a random arry based on number input
 const genCards = (numCards) => {
-    const randomNumArr = randomNums(numCards)
-    const cardNames = randomNumArr.map(nums => dataUtils.cardPossibilities[nums - 1].cardName)
-    return cardNames;
-}
-
-//returns an array of random nums from 1-13 based on user numCards input and wether any cards are empty
-const randomNums = (numcards) => {
     let emptyCardArray = testForEmptyCards()
     let randomNums = []
     for (let i = 0; i < numCards; i++) {
@@ -19,9 +14,10 @@ const randomNums = (numcards) => {
     return randomNums;
 }
 
+
 // test for and generates an array of empty cards from the main deck
 function testForEmptyCards() {
-    const addDeckIndex = dataUtils.cardPossibilities.map((obj, i) => Object.assign(obj, { index: i }))
+    const addDeckIndex = cardDeck.map((obj, i) => Object.assign(obj, { index: i }))
     const filterEmptyCards = addDeckIndex.filter(x => x.numInDeck == 0)
     const mapEmptyCards = filterEmptyCards.map(y => (y.index + 1))
     return mapEmptyCards
@@ -37,14 +33,5 @@ function randomExcluded(exclude) {
     const randomIndex = Math.floor(Math.random() * nums.length);
     return nums[randomIndex];
 }
-
-
-
-
-
-
-
-
-
 
 module.exports = { genCards }

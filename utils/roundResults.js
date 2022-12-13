@@ -1,10 +1,9 @@
-const dataUtils = require("./data")
+
 const print = require('./print')
 const space = '--------------------------------------------------'
-const player = dataUtils.playerHands
-const dealer = dataUtils.dealerHand
 
-const roundResults = (player) => {
+
+const roundResults = (player, dealer) => {
 
     
         //scenarios if player or dealer get blackjack
@@ -45,7 +44,7 @@ const roundResults = (player) => {
             print(`${player.name}'s sum: ${player.sum} -- The dealer won`)
         }
     print(space)
-    return updatedPlayer;
+    return player;
 }
 
 module.exports = { roundResults }
