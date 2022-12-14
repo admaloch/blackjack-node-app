@@ -113,6 +113,7 @@ while (isGameActive) {
                 } else {
                     if (betNotNum === 'quit' || betNotNum === 'q') {
                         inactivePlayers = quitUtils.removePlayers(player)
+                        print(inactivePlayers)
                         isBetValid = true;
                         isGameActive = false;
                     } else if (betNotNum === 'leave' || betNotNum === 'l') {
@@ -275,7 +276,7 @@ while (isGameActive) {
         }
         print(space)
     }
-    
+
     //results section
     //run functions to test players hands/deck/reset etc..
     if (inactivePlayers.length !== numPlayers) {
