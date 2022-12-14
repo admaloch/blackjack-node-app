@@ -19,6 +19,7 @@ const genCards = (numCards) => {
 function testForEmptyCards() {
     const addDeckIndex = cardDeck.map((obj, i) => Object.assign(obj, { index: i }))
     const filterEmptyCards = addDeckIndex.filter(x => x.numInDeck == 0)
+
     const mapEmptyCards = filterEmptyCards.map(y => (y.index + 1))
     return mapEmptyCards
 }

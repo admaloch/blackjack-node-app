@@ -3,7 +3,7 @@ const print = require('./utils/print')
 const cardUtils = require("./utils/cardGen")
 const updatePlayerUtils = require("./utils/updatePlayer")
 const removeCardsUtils = require("./utils/removeCards")
-// const shuffleUtils = require("./utils/shuffle")
+const shuffleUtils = require("./utils/shuffle")
 const data = require("./utils/data")
 const quitUtils = require("./utils/playerQuit")
 const printEndResults = require("./utils/endResults")
@@ -16,7 +16,7 @@ const resultsUtils = require("./utils/roundResults")
 const alterAceUtils = require('./utils/alterAce')
 
 let mainDeck = data.cardPossibilities;
-// const initCardAmount = 4;
+let initCardAmount = 0;
 let player = []
 let inactivePlayers = []
 let dealer = {
@@ -43,6 +43,7 @@ while (!isPlayerNumValid) {
     if (numPlayers > 0 && numPlayers <= 5) {
         player = addPlayersUtils.addPlayers(numPlayers)
         isPlayerNumValid = true;
+        initCardAmount = (numPlayers * 4) + 4
     } else if (numPlayers > 5) {
         print('Invalid response. Maximum number of players is 5')
         print(space)
@@ -84,6 +85,7 @@ while (!isLeaveIntro) {
         print(space)
         print('Invalid response. Respond with (Yes or No)')
     }
+    mainDeck = shuffleUtils.shuffle(mainDeck, initCardAmount)
 }
 // begin game. 
 //game active until all players run out of money, leave the table, or someone quits.
@@ -290,7 +292,7 @@ while (isGameActive) {
 
         }
         dealer = resetUtils.handReset(dealer)
-        // mainDeck = shuffleUtils.shuffle(mainDeck, initCardAmount)
+        mainDeck = shuffleUtils.shuffle(mainDeck, initCardAmount)
     }
 
     console.log(mainDeck)
