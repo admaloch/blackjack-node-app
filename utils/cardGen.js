@@ -1,6 +1,6 @@
-const dataUtils = require("./data")
 
-let cardDeck = dataUtils.cardPossibilities;
+
+let deck = require("./deck")
 
 //generates a random arry based on number input
 const genCards = (numCards) => {
@@ -17,7 +17,7 @@ const genCards = (numCards) => {
 
 // test for and generates an array of empty cards from the main deck
 function testForEmptyCards() {
-    const addDeckIndex = cardDeck.map((obj, i) => Object.assign(obj, { index: i }))
+    const addDeckIndex = deck.map((obj, i) => Object.assign(obj, { index: i }))
     const filterEmptyCards = addDeckIndex.filter(x => x.numInDeck == 0)
 
     const mapEmptyCards = filterEmptyCards.map(y => (y.index + 1))

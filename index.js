@@ -4,7 +4,7 @@ const cardUtils = require("./utils/cardGen")
 const updatePlayerUtils = require("./utils/updatePlayer")
 const removeCardsUtils = require("./utils/removeCards")
 const shuffleUtils = require("./utils/shuffle")
-const data = require("./utils/data")
+let deck = require("./utils/deck")
 const quitUtils = require("./utils/playerQuit")
 const printEndResults = require("./utils/endResults")
 const betUtils = require("./utils/betOptions")
@@ -15,7 +15,7 @@ const addPlayersUtils = require('./utils/addPlayers')
 const resultsUtils = require("./utils/roundResults")
 const alterAceUtils = require('./utils/alterAce')
 
-let mainDeck = data.cardPossibilities;
+// let mainDeck = data.cardPossibilities;
 let initCardAmount = 0;
 let player = []
 let inactivePlayers = []
@@ -52,7 +52,6 @@ while (!isPlayerNumValid) {
     }
 }
 
-
 //asks players if ready to start 
 let isLeaveIntro = false;
 let isGameActive = false;
@@ -74,6 +73,7 @@ while (!isLeaveIntro) {
             player[i].isPlayerActive = true
         }
         print(space)
+        deck = shuffleUtils.shuffle(deck, initCardAmount)
         isLeaveIntro = true;
         isGameActive = true;
     } else if (begin == 'no' || begin == 'n' || begin == 'quit' || begin == 'q') {
@@ -85,7 +85,6 @@ while (!isLeaveIntro) {
         print(space)
         print('Invalid response. Respond with (Yes or No)')
     }
-    mainDeck = shuffleUtils.shuffle(mainDeck, initCardAmount)
 }
 // begin game. 
 //game active until all players run out of money, leave the table, or someone quits.
@@ -143,7 +142,7 @@ while (isGameActive) {
         const randomNums = cardUtils.genCards(2)
         const cardNames = updatePlayerUtils.genCardNames(randomNums)
         dealer = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, dealer)
-        mainDeck = removeCardsUtils.removeFromDeck(cardNames)
+        deck = removeCardsUtils.removeFromDeck(cardNames)
         print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
     }
     //players draw 2 cards
@@ -153,7 +152,7 @@ while (isGameActive) {
                 const randomNums = cardUtils.genCards(2)
                 const cardNames = updatePlayerUtils.genCardNames(randomNums)
                 player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
-                mainDeck = removeCardsUtils.removeFromDeck(cardNames)
+                deck = removeCardsUtils.removeFromDeck(cardNames)
                 if (player[i].sum === 21) {
                     player[i].isBlackjack = true;
                     print(`${player[i].name}'s hand: ${player[i].hand} -- Blackjack!`)
@@ -184,7 +183,7 @@ while (isGameActive) {
                         const randomNums = cardUtils.genCards(1)
                         const cardNames = updatePlayerUtils.genCardNames(randomNums)
                         player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
-                        mainDeck = removeCardsUtils.removeFromDeck(cardNames)
+                        deck = removeCardsUtils.removeFromDeck(cardNames)
                         player[i] = alterAceUtils.alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                         isDoubleUpValid = true;
@@ -216,7 +215,7 @@ while (isGameActive) {
                         const randomNums = cardUtils.genCards(1)
                         const cardNames = updatePlayerUtils.genCardNames(randomNums)
                         player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
-                        mainDeck = removeCardsUtils.removeFromDeck(cardNames)
+                        deck = removeCardsUtils.removeFromDeck(cardNames)
                         player[i] = alterAceUtils.alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                     } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
@@ -252,7 +251,7 @@ while (isGameActive) {
                 const randomNums = cardUtils.genCards(1)
                 const cardNames = updatePlayerUtils.genCardNames(randomNums)
                 dealer = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, dealer)
-                mainDeck = removeCardsUtils.removeFromDeck(cardNames)
+                deck = removeCardsUtils.removeFromDeck(cardNames)
                 dealer = alterAceUtils.alterAceValue(dealer)
                 print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
             }
@@ -292,10 +291,10 @@ while (isGameActive) {
 
         }
         dealer = resetUtils.handReset(dealer)
-        mainDeck = shuffleUtils.shuffle(mainDeck, initCardAmount)
+        deck = shuffleUtils.shuffle(deck, initCardAmount)
     }
 
-    console.log(mainDeck)
+    console.log(deck)
 
 
 

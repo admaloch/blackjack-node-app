@@ -1,7 +1,6 @@
-const dataUtils = require("./data")
+
 const print = require('./print')
-dataUtils.isGameActive = false;
-const player = dataUtils.playerHands
+
 const space = '--------------------------------------------------'
 
 // displays final stats when game is over
