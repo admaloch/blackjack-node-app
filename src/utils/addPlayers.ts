@@ -2,11 +2,24 @@
 const prompt = require('prompt-sync')()
 // const player = dataUtils.playerHands
 
-
+interface Players {
+    name: string;
+    hand: string[];
+    handValues: number[];
+    sum: Number;
+    bank: Number;
+    bet: Number;
+    minBet: Number;
+    betDoubled: Boolean;
+    isPlayerActive: Boolean;
+    isBlackjack: Boolean;
+    betOptions: string[];
+    roundsWon: Number;
+}
 
 //add players at beginning of game
-let playerArray = []
-const addPlayers = (numPlayers) => {
+let playerArray: Players[] = []
+const addPlayers = (numPlayers: number): Players => {
     for (let i = 0; i < numPlayers; i++) {
         playerArray[i] = {
             name: '',
@@ -22,10 +35,13 @@ const addPlayers = (numPlayers) => {
             betOptions: ['$5', '$25', '$50', '$100', '$500', '$1000', 'All'],
             roundsWon: 0,
         };
-        let name = prompt(`Player ${i + 1}: Enter your name: `)
+        let name: string = prompt(`Player ${i + 1}: Enter your name: `)
         name = name[0].toUpperCase() + name.slice(1).trim()
         playerArray[i].name = name
     }
-    return playerArray
+    return playerArray;
 }
 module.exports = { addPlayers }
+
+
+
