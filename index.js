@@ -5,7 +5,6 @@ const updatePlayerUtils = require("./utils/updatePlayer")
 const removeCardsUtils = require("./utils/removeCards")
 const shuffleUtils = require("./utils/shuffle")
 let deck = require("./utils/deck")
-const quitUtils = require("./utils/playerQuit")
 const printEndResults = require("./utils/endResults")
 const betUtils = require("./utils/betOptions")
 const resetUtils = require("./utils/handReset")
@@ -117,7 +116,8 @@ while (isGameActive) {
                         isBetValid = true;
                         isGameActive = false;
                     } else if (betNotNum === 'leave' || betNotNum === 'l') {
-                        inactivePlayers.push(quitUtils.playerLeftTable(player[i]))
+                        print(`${player[i].name} left the table.`)
+                        inactivePlayers.push(player[i])
                         isBetValid = true;
                         print(space)
                     } else {
@@ -197,8 +197,9 @@ while (isGameActive) {
                         isDoubleUpValid = true;
                         isGameActive = false
                     } else if (doubleUp === 'leave' || doubleUp === 'l') {
+                        print(`${player[i].name} left the table.`)
+                        inactivePlayers.push(player[i])
                         isDoubleUpValid = true;
-                        inactivePlayers.push(quitUtils.playerLeftTable(player[i]))
                     } else {
                         doubleUp = prompt("Invalid response. Pick (Yes or No) ")
                     }
@@ -225,8 +226,9 @@ while (isGameActive) {
                         playerIsDone = true
                         isGameActive = false
                     } else if (hitOrStay === 'leave' || hitOrStay === 'l') {
+                        print(`${player[i].name} left the table.`)
+                        inactivePlayers.push(player[i])
                         playerIsDone = true
-                        inactivePlayers.push(quitUtils.playerLeftTable(player[i]))
                     } else if (hitOrStay === 'stay' || hitOrStay === 's') {
                         print('You decided to stay')
                         playerIsDone = true
