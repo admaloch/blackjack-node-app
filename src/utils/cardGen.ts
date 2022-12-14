@@ -3,9 +3,9 @@
 let deck = require("./deck")
 
 //generates a random arry based on number input
-const genCards = (numCards) => {
+const genCards = (numCards: number): number[] => {
     let emptyCardArray = testForEmptyCards()
-    let randomNums = []
+    let randomNums: number[] = []
     for (let i = 0; i < numCards; i++) {
         emptyCardArray.length === 0
             ? randomNums.push(Math.floor(Math.random() * 13) + 1)
@@ -16,7 +16,7 @@ const genCards = (numCards) => {
 
 
 // test for and generates an array of empty cards from the main deck
-function testForEmptyCards() {
+function testForEmptyCards(): number[] {
     const addDeckIndex = deck.map((obj, i) => Object.assign(obj, { index: i }))
     const filterEmptyCards = addDeckIndex.filter(x => x.numInDeck == 0)
 
@@ -25,7 +25,7 @@ function testForEmptyCards() {
 }
 
 //takes an array of numbers and gens random num that excludes them
-function randomExcluded(exclude) {
+const randomExcluded = (exclude: number[]): (number | boolean)[] => {
     const nums = [];
     for (let i = 1; i <= 13; i++) {
         if (!exclude.includes(i)) nums.push(i);

@@ -35,7 +35,8 @@ const addPlayers = (numPlayers: number): Players => {
             betOptions: ['$5', '$25', '$50', '$100', '$500', '$1000', 'All'],
             roundsWon: 0,
         };
-        let name: string = prompt(`Player ${i + 1}: Enter your name: `)
+        
+        let name = prompt(`Player ${i + 1}: Enter your name: `)
         name = name[0].toUpperCase() + name.slice(1).trim()
         playerArray[i].name = name
     }

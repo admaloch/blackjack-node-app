@@ -1,6 +1,22 @@
 
+interface Players {
+    name: string;
+    hand: string[];
+    handValues: number[];
+    sum: Number;
+    bank: Number;
+    bet: Number;
+    minBet: Number;
+    betDoubled: Boolean;
+    isPlayerActive: Boolean;
+    isBlackjack: Boolean;
+    betOptions: string[];
+    roundsWon: Number;
+}
+
+
 // updates bet options based on amount in players bank
-function changeBetOptions(player) {
+const changeBetOptions = (player: Players): string[] => {
     let betOptions = ['$5', '$25', '$50', '$100', '$500', '$1000', 'All']
     if (player.bank < 1000) {
         const strToNums = betOptions.map(x => parseInt(x.replace(/\D/g, "")))
@@ -8,11 +24,11 @@ function changeBetOptions(player) {
         betOptions = filterBank.map(x => '$' + x)
         betOptions.push('All')
     }
-    return betOptions
+    return betOptions;
 }
 
 // updates min bet for player based on previous bet/amount in bank
-function setMinBet(player) {
+function setMinBet(player: Players): Number {
     if (player.bet <= player.bank && !player.betDoubled) {
         return player.bet
     } else if (player.bet <= player.bank && player.betDoubled === true) {
