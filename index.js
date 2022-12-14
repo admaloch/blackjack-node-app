@@ -112,8 +112,8 @@ while (isGameActive) {
                     isBetValid = true
                 } else {
                     if (betNotNum === 'quit' || betNotNum === 'q') {
-                        inactivePlayers = quitUtils.removePlayers(player)
-                        print(inactivePlayers)
+                        player.forEach(players => players.isPlayerActive = false)
+                        inactivePlayers = player;
                         isBetValid = true;
                         isGameActive = false;
                     } else if (betNotNum === 'leave' || betNotNum === 'l') {
@@ -192,8 +192,8 @@ while (isGameActive) {
                         playerCanHit = true
                         isDoubleUpValid = true;
                     } else if (doubleUp === 'quit' || doubleUp === 'q') {
-                        inactivePlayers = quitUtils.removePlayers(player)
-                        print(quitUtils.quitGame(player[i].name))
+                        player.forEach(players => players.isPlayerActive = false)
+                        inactivePlayers = player;
                         isDoubleUpValid = true;
                         isGameActive = false
                     } else if (doubleUp === 'leave' || doubleUp === 'l') {
@@ -220,7 +220,8 @@ while (isGameActive) {
                         player[i] = alterAceUtils.alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                     } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
-                        inactivePlayers = quitUtils.removePlayers(player)
+                        player.forEach(players => players.isPlayerActive = false)
+                        inactivePlayers = player;
                         playerIsDone = true
                         isGameActive = false
                     } else if (hitOrStay === 'leave' || hitOrStay === 'l') {

@@ -8,16 +8,14 @@ const playerLeftTable = (player) => {
 
 // loops over players and changes isPlayerActive to false and returns as an array
 const removePlayers = (player) => {
-    let newPlayers = player
     let removedPlayers = []
-    for (let i = 0; i < newPlayers.length; i++) {
-        if (newPlayers[i].isPlayerActive) {
-            print(newPlayers[i])
-            newPlayers[i].isPlayerActive = false
-            removedPlayers.push(newPlayers[i])
+    for (let i = 0; i < player.length; i++) {
+        if (player[i].isPlayerActive) {
+            player[i].isPlayerActive = false
+            removedPlayers.push(player[i])
         }
-        return removedPlayers;
     }
+    return removedPlayers;
 }
 
 module.exports = { removePlayers, playerLeftTable }
