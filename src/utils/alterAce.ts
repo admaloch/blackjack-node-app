@@ -1,21 +1,7 @@
+import { Players, Dealer } from "./interfaces"
+
 //changes the last instance of ace from 11 to 1 as long as the players sum is > 21
-
-interface Players {
-    name: string;
-    hand: string[];
-    handValues: number[];
-    sum: Number;
-    bank: Number;
-    bet: Number;
-    minBet: Number;
-    betDoubled: Boolean;
-    isPlayerActive: Boolean;
-    isBlackjack: Boolean;
-    betOptions: string[];
-    roundsWon: Number;
-}
-
-const alterAceValue = (player: Players): Players => {
+const alterAceValue = (player: Players| Dealer): Players| Dealer => {
     if (player.hand.includes('Ace')) {
         while (player.sum > 21) {
             let lastIndex = player.handValues.lastIndexOf(11);

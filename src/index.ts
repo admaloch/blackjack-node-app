@@ -13,17 +13,19 @@ const hideDealerUtils = require("./utils/hideDealer")
 const addPlayersUtils = require('./utils/addPlayers')
 const resultsUtils = require("./utils/roundResults")
 const alterAceUtils = require('./utils/alterAce')
+import { Players, Dealer } from "./utils/interfaces"
+import { YesOrNo, HitOrStay, QuitOrLeave } from "./utils/types"
 
 // let mainDeck = data.cardPossibilities;
 let initCardAmount = 0;
-let player = []
-let inactivePlayers = []
-let dealer = {
+let player: Players[] = []
+let inactivePlayers: Players[] = []
+let dealer: Dealer = {
     name: 'The Dealer',
     hand: [],
     handValues: [],
     sum: 0,
-    isBlackJack: false,
+    isBlackjack: false,
 }
 
 // Begin game
@@ -35,7 +37,7 @@ print(space)
 //num players section
 //ask for number of players and confirm it is valid
 let isPlayerNumValid = false;
-let numPlayers = 0;
+let numPlayers: string | number = 0
 while (!isPlayerNumValid) {
     numPlayers = parseInt(prompt("How many players? "));
     print(space)
@@ -55,7 +57,7 @@ while (!isPlayerNumValid) {
 let isLeaveIntro = false;
 let isGameActive = false;
 while (!isLeaveIntro) {
-    let begin = '';
+    let begin: YesOrNo 
     print(space)
     if (numPlayers > 1) {
         begin = prompt(`Are all players ready to enter the table? (Yes or No) `).trim().toLowerCase()
@@ -97,14 +99,12 @@ while (isGameActive) {
         if (player[i].isPlayerActive === true) {
             print(`${player[i].name}:`)
             print(`Current bank: $${player[i].bank} -- Minimum bet: $${player[i].minBet}`)
-            player[i].bet = prompt(`Place your bet using any combination of the available chips (${player[i].betOptions}) `)
             let isBetValid = false
-            let betNotNum = ''
+            let betNotNum: string = prompt(`Place your bet using any combination of the available chips (${player[i].betOptions}) `)
             while (!isBetValid) {
-                betNotNum = player[i].bet.trim().toLowerCase()
-                player[i].bet = parseInt(player[i].bet.replace(/\D/g, ""))
+                player[i].bet = parseInt(betNotNum.replace(/\D/g, ""))
                 if (player[i].bet % 5 === 0 && player[i].bet >= player[i].minBet && player[i].bet <= player[i].bank || betNotNum === 'all') {
-                    if (betNotNum === 'all') { player[i].bet = player[i].bank }
+                    if (betNotNum === 'all')  player[i].bet = player[i].bank 
                     player[i].bank -= player[i].bet
                     print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
                     print(space)
@@ -140,8 +140,9 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         print('Dealing cards:')
         print(space)
-        const randomNums = cardUtils.genCards(2)
-        const cardNames = updatePlayerUtils.genCardNames(randomNums)
+        const emptyCards = cardUtils.testForEmptyCards(deck)
+        const randomNums = cardUtils.genCards(2, emptyCards)
+        const cardNames= updatePlayerUtils.genCardNames(randomNums)
         dealer = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, dealer)
         deck = removeCardsUtils.removeFromDeck(cardNames)
         print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
@@ -173,7 +174,7 @@ while (isGameActive) {
             print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
             // double up section
             if (player[i].bet <= player[i].bank) {
-                let doubleUp = prompt("Double up? (Yes or No) ").trim().toLowerCase()
+                let doubleUp: YesOrNo = prompt("Double up? (Yes or No) ").trim().toLowerCase()
                 let isDoubleUpValid = false
                 while (isDoubleUpValid === false) {
                     if (doubleUp === 'yes' || doubleUp === 'y') {
@@ -209,7 +210,7 @@ while (isGameActive) {
             }
             // hit or stay section
             if (playerCanHit === true) {
-                let hitOrStay = ''
+                let hitOrStay:  = ''
                 let playerIsDone = false
                 while (playerIsDone === false && player[i].sum < 21) {
                     hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
@@ -249,7 +250,7 @@ while (isGameActive) {
         if (dealer.sum === 21) {
             print(space)
             print('Blackjack!')
-            dealer.isBlackJack = true;
+            dealer.isBlackjack = true;
         } else {
             while (dealer.sum < 17) {
                 const randomNums = cardUtils.genCards(1)
@@ -270,7 +271,7 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         print(`Round ${roundNum} results: `)
         print(space)
-        if (dealer.isBlackJack) {
+        if (dealer.isBlackjack) {
             print(`Dealer: Blackjack`)
         } else if (dealer.sum > 21) {
             print('Dealer bust')
@@ -297,10 +298,6 @@ while (isGameActive) {
         dealer = resetUtils.handReset(dealer)
         deck = shuffleUtils.shuffle(deck, initCardAmount)
     }
-
-    console.log(deck)
-
-
 
     if (inactivePlayers.length === numPlayers) {
         print(space)

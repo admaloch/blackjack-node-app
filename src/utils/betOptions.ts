@@ -1,18 +1,4 @@
-
-interface Players {
-    name: string;
-    hand: string[];
-    handValues: number[];
-    sum: Number;
-    bank: Number;
-    bet: Number;
-    minBet: Number;
-    betDoubled: Boolean;
-    isPlayerActive: Boolean;
-    isBlackjack: Boolean;
-    betOptions: string[];
-    roundsWon: Number;
-}
+import { Players } from "./interfaces";
 
 
 // updates bet options based on amount in players bank
@@ -28,7 +14,7 @@ const changeBetOptions = (player: Players): string[] => {
 }
 
 // updates min bet for player based on previous bet/amount in bank
-function setMinBet(player: Players): Number {
+const setMinBet = (player: Players): number => {
     if (player.bet <= player.bank && !player.betDoubled) {
         return player.bet
     } else if (player.bet <= player.bank && player.betDoubled === true) {

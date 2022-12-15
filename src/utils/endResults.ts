@@ -1,10 +1,10 @@
-
+import { Players } from "./interfaces"
 const print = require('./print')
 
 const space = '--------------------------------------------------'
 
 // displays final stats when game is over
-function endGameResults(player, roundNum) {
+function endGameResults(player: Players[], roundNum: number): void {
     print('Game results:')
     print(space)
     print(`Total rounds played: ${roundNum}`)
@@ -15,7 +15,8 @@ function endGameResults(player, roundNum) {
         print(`${player[i].name}:`)
         print(`Bank: $${player[i].bank}`)
         print(`Rounds won: ${player[i].roundsWon}`)
-        player[i].bank <= 1000 ? print(`Money lost: $${loss}`)
+        player[i].bank <= 1000
+            ? print(`Money lost: $${loss}`)
             : print(`Money earned: $${gain}`)
         print(space)
     }

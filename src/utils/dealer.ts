@@ -1,11 +1,11 @@
+import { Dealer } from "./interfaces"
 
-
-let dealer = {
+let dealer: Dealer = {
     name: 'The Dealer',
     hand: [],
     handValues: [],
     sum: 0,
-    isBlackJack: false,
+    isBlackjack: false,
 }
 
 module.exports = {dealer}

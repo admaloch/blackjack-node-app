@@ -1,6 +1,6 @@
+import { CardObj } from "./interfaces"
 
-
-let deck = [
+let deck: CardObj[] = [
     { cardName: 'Ace', cardValue: 11, numInDeck: 0 },
     { cardName: '2', cardValue: 2, numInDeck: 0 },
     { cardName: '3', cardValue: 3, numInDeck: 0 },
@@ -15,4 +15,4 @@ let deck = [
     { cardName: 'Queen', cardValue: 10, numInDeck: 0 },
     { cardName: 'King', cardValue: 10, numInDeck: 0 },
 ]
-module.exports =  deck 
+module.exports = deck 

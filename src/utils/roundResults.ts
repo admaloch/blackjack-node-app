@@ -1,22 +1,20 @@
 
 const print = require('./print')
 const space = '--------------------------------------------------'
+import { Players, Dealer } from "./interfaces"
 
-
-const roundResults = (player, dealer) => {
-
-    
+const roundResults = (player: Players, dealer: Dealer): Players => {
         //scenarios if player or dealer get blackjack
-        if (player.isBlackjack && dealer.isBlackJack) {
+        if (player.isBlackjack && dealer.isBlackjack) {
             print(`${player.name}: Blackjack -- Push`)
             player.bank += player.bet
-        } else if (player.isBlackjack && !dealer.isBlackJack) {
+        } else if (player.isBlackjack && !dealer.isBlackjack) {
             print(`${player.name}: Blackjack! -- ${player.name} wins!`)
             player.bank += player.bet * 2.5
             player.roundsWon++
-        } else if (!player.isBlackjack && dealer.isBlackJack) {
+        } else if (!player.isBlackjack && dealer.isBlackjack) {
             print(`${player.name}'s sum: ${player.sum} -- The dealer won`)
-        } else if (player.sum > 21 && dealer.isBlackJack) {
+        } else if (player.sum > 21 && dealer.isBlackjack) {
             print(`${player.name}'s sum: ${player.sum} -- ${player.name} bust -- The dealer won`)
         }
 
