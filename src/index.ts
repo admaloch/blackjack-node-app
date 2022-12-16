@@ -1,32 +1,29 @@
-const prompt = require('prompt-sync')()
-const print = require('./utils/print')
-const cardUtils = require("./utils/cardGen")
-const updatePlayerUtils = require("./utils/updatePlayer")
-const removeCardsUtils = require("./utils/removeCards")
-const shuffleUtils = require("./utils/shuffle")
-let deck = require("./utils/deck")
-const printEndResults = require("./utils/endResults")
-const betUtils = require("./utils/betOptions")
-const resetUtils = require("./utils/handReset")
-const bankUtils = require("./utils/testBank")
-const hideDealerUtils = require("./utils/hideDealer")
-const addPlayersUtils = require('./utils/addPlayers')
-const resultsUtils = require("./utils/roundResults")
-const alterAceUtils = require('./utils/alterAce')
-import { Players, Dealer } from "./utils/interfaces"
-import { YesOrNo, HitOrStay, QuitOrLeave } from "./utils/types"
+import promptSync from 'prompt-sync';
+import { print } from './utils/print';
+import { genCards, testForEmptyCards } from './utils/cardGen';
+import { endGameResults } from './utils/endResults';
+import { handReset } from './utils/handReset';
+import { mainDeck } from './utils/deck';
+import { changeBetOptions, setMinBet } from './utils/betOptions';
+import { addPlayers } from "./utils/addPlayers"
+import { alterAceValue } from './utils/alterAce';
+import { hideDealerCards } from './utils/hideDealer';
+import { removeFromDeck } from './utils/removeCards';
+import { roundResults } from './utils/roundResults';
+import { shuffle } from './utils/shuffle';
+import { isBankEmpty } from './utils/testBank';
+import { genCardNames, updatePlayerObj } from './utils/updatePlayer';
+import { dealerObject } from './utils/dealer';
 
-// let mainDeck = data.cardPossibilities;
-let initCardAmount = 0;
+import { Players } from "./utils/interfaces"
+import { YesOrNo, HitOrStay, QuitOrLeave } from "./utils/typeAlias"
+
+const prompt = promptSync();
 let player: Players[] = []
 let inactivePlayers: Players[] = []
-let dealer: Dealer = {
-    name: 'The Dealer',
-    hand: [],
-    handValues: [],
-    sum: 0,
-    isBlackjack: false,
-}
+let dealer = dealerObject;
+let initCardAmount = 0;
+let deck = mainDeck;
 
 // Begin game
 const space = '--------------------------------------------------'
@@ -42,7 +39,7 @@ while (!isPlayerNumValid) {
     numPlayers = parseInt(prompt("How many players? "));
     print(space)
     if (numPlayers > 0 && numPlayers <= 5) {
-        player = addPlayersUtils.addPlayers(numPlayers)
+        player = addPlayers(numPlayers)
         isPlayerNumValid = true;
         initCardAmount = (numPlayers * 4) + 4
     } else if (numPlayers > 5) {
@@ -57,7 +54,7 @@ while (!isPlayerNumValid) {
 let isLeaveIntro = false;
 let isGameActive = false;
 while (!isLeaveIntro) {
-    let begin: YesOrNo 
+    let begin: YesOrNo | QuitOrLeave
     print(space)
     if (numPlayers > 1) {
         begin = prompt(`Are all players ready to enter the table? (Yes or No) `).trim().toLowerCase()
@@ -74,7 +71,7 @@ while (!isLeaveIntro) {
             player[i].isPlayerActive = true
         }
         print(space)
-        deck = shuffleUtils.shuffle(deck, initCardAmount)
+        deck = shuffle(deck, initCardAmount)
         isLeaveIntro = true;
         isGameActive = true;
     } else if (begin == 'no' || begin == 'n' || begin == 'quit' || begin == 'q') {
@@ -104,7 +101,7 @@ while (isGameActive) {
             while (!isBetValid) {
                 player[i].bet = parseInt(betNotNum.replace(/\D/g, ""))
                 if (player[i].bet % 5 === 0 && player[i].bet >= player[i].minBet && player[i].bet <= player[i].bank || betNotNum === 'all') {
-                    if (betNotNum === 'all')  player[i].bet = player[i].bank 
+                    if (betNotNum === 'all') player[i].bet = player[i].bank
                     player[i].bank -= player[i].bet
                     print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
                     print(space)
@@ -140,21 +137,22 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         print('Dealing cards:')
         print(space)
-        const emptyCards = cardUtils.testForEmptyCards(deck)
-        const randomNums = cardUtils.genCards(2, emptyCards)
-        const cardNames= updatePlayerUtils.genCardNames(randomNums)
-        dealer = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, dealer)
-        deck = removeCardsUtils.removeFromDeck(cardNames)
-        print(`The dealer's hand: ${hideDealerUtils.hideDearlerCards(dealer.hand)}`)
+        const emptyCards = testForEmptyCards(deck)
+        const randomNums = genCards(2, emptyCards)
+        const cardNames = genCardNames(randomNums)
+        dealer = updatePlayerObj(randomNums, cardNames, dealer)
+        deck = removeFromDeck(cardNames)
+        print(`The dealer's hand: ${hideDealerCards(dealer.hand)}`)
     }
     //players draw 2 cards
     if (inactivePlayers.length !== numPlayers) {
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive === true) {
-                const randomNums = cardUtils.genCards(2)
-                const cardNames = updatePlayerUtils.genCardNames(randomNums)
-                player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
-                deck = removeCardsUtils.removeFromDeck(cardNames)
+                const emptyCards = testForEmptyCards(deck)
+                const randomNums = genCards(2, emptyCards)
+                const cardNames = genCardNames(randomNums)
+                player[i] = updatePlayerObj(randomNums, cardNames, player[i])
+                deck = removeFromDeck(cardNames)
                 if (player[i].sum === 21) {
                     player[i].isBlackjack = true;
                     print(`${player[i].name}'s hand: ${player[i].hand} -- Blackjack!`)
@@ -182,11 +180,11 @@ while (isGameActive) {
                         player[i].bank -= player[i].bet
                         player[i].bet = player[i].bet * 2
                         print(`Doubled bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
-                        const randomNums = cardUtils.genCards(1)
-                        const cardNames = updatePlayerUtils.genCardNames(randomNums)
-                        player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
-                        deck = removeCardsUtils.removeFromDeck(cardNames)
-                        player[i] = alterAceUtils.alterAceValue(player[i])
+                        const emptyCards = testForEmptyCards(deck)
+                        const randomNums = genCards(1, emptyCards)
+                        const cardNames = genCardNames(randomNums)
+                        player[i] = updatePlayerObj(randomNums, cardNames, player[i])
+                        player[i] = alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                         isDoubleUpValid = true;
                     } else if (doubleUp === 'no' || doubleUp === 'n') {
@@ -210,16 +208,16 @@ while (isGameActive) {
             }
             // hit or stay section
             if (playerCanHit === true) {
-                let hitOrStay:  = ''
+                let hitOrStay: HitOrStay | QuitOrLeave = ''
                 let playerIsDone = false
                 while (playerIsDone === false && player[i].sum < 21) {
                     hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
                     if (hitOrStay === 'hit' || hitOrStay === 'h') {
-                        const randomNums = cardUtils.genCards(1)
-                        const cardNames = updatePlayerUtils.genCardNames(randomNums)
-                        player[i] = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, player[i])
-                        deck = removeCardsUtils.removeFromDeck(cardNames)
-                        player[i] = alterAceUtils.alterAceValue(player[i])
+                        const emptyCards = testForEmptyCards(deck)
+                        const randomNums = genCards(1, emptyCards)
+                        const cardNames = genCardNames(randomNums)
+                        player[i] = updatePlayerObj(randomNums, cardNames, player[i])
+                        player[i] = alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                     } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
                         player.forEach(players => players.isPlayerActive = false)
@@ -253,11 +251,11 @@ while (isGameActive) {
             dealer.isBlackjack = true;
         } else {
             while (dealer.sum < 17) {
-                const randomNums = cardUtils.genCards(1)
-                const cardNames = updatePlayerUtils.genCardNames(randomNums)
-                dealer = updatePlayerUtils.updatePlayerObj(randomNums, cardNames, dealer)
-                deck = removeCardsUtils.removeFromDeck(cardNames)
-                dealer = alterAceUtils.alterAceValue(dealer)
+                const emptyCards = testForEmptyCards(deck)
+                const randomNums = genCards(1, emptyCards)
+                const cardNames = genCardNames(randomNums)
+                dealer = updatePlayerObj(randomNums, cardNames, dealer)
+                dealer = alterAceValue(dealer)
                 print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
             }
         } if (dealer.sum > 21) {
@@ -286,17 +284,17 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive) {
-                player[i] = resultsUtils.roundResults(player[i], dealer)
-                player[i].isPlayerActive = bankUtils.isBankEmpty(player[i])
-                player[i].betOptions = betUtils.changeBetOptions(player[i])
-                player[i].minBet = betUtils.setMinBet(player[i])
-                player[i] = resetUtils.handReset(player[i])
+                player[i] = roundResults(player[i], dealer)
+                player[i].isPlayerActive = isBankEmpty(player[i])
+                player[i].betOptions = changeBetOptions(player[i])
+                player[i].minBet = setMinBet(player[i])
+                player[i] = handReset(player[i])
                 if (!player[i].isPlayerActive) inactivePlayers.push(player[i])
             }
 
         }
-        dealer = resetUtils.handReset(dealer)
-        deck = shuffleUtils.shuffle(deck, initCardAmount)
+        dealer = handReset(dealer)
+        deck = shuffle(deck, initCardAmount)
     }
 
     if (inactivePlayers.length === numPlayers) {
@@ -304,6 +302,6 @@ while (isGameActive) {
         print('All players have left the table')
         print(space)
         isGameActive = false;
-        printEndResults.endGameResults(player, roundNum)
+        endGameResults(player, roundNum)
     }
 }

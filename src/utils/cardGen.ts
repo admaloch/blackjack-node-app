@@ -1,9 +1,8 @@
-let deck = require("./deck")
+
 import { CardObj } from "./interfaces"
 
-
 // test for and generates an array of empty cards from the main deck
-function testForEmptyCards(deck: CardObj[]): number[] {
+export const testForEmptyCards = (deck: CardObj[]): number[] => {
     const addDeckIndex = deck.map((obj, i) => Object.assign(obj, { index: i }))
     const filterEmptyCards = addDeckIndex.filter(x => x.numInDeck == 0)
     const mapEmptyCards = filterEmptyCards.map(y => (y.index + 1))
@@ -11,7 +10,7 @@ function testForEmptyCards(deck: CardObj[]): number[] {
 }
 
 //generates a random arry based on number input
-const genCards = (numCards: number, emptyCards: number[]): number[] => {
+export const genCards = (numCards: number, emptyCards: number[]): number[] => {
     let randomNums: number[] = []
     for (let i = 0; i < numCards; i++) {
         emptyCards.length === 0
@@ -38,4 +37,3 @@ const randomExcluded = (emptyCardArr: number[]): number => {
     const randomIndex = Math.floor(Math.random() * nums.length);
     return nums[randomIndex];
 }
-module.exports = { genCards, testForEmptyCards }

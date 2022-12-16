@@ -1,6 +1,6 @@
 import { Dealer } from "./interfaces"
 
-let dealer: Dealer = {
+export let dealerObject: Dealer = {
     name: 'The Dealer',
     hand: [],
     handValues: [],
@@ -8,4 +8,3 @@ let dealer: Dealer = {
     isBlackjack: false,
 }
 
-module.exports = {dealer}

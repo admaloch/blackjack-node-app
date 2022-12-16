@@ -1,9 +1,10 @@
 import { Players } from "./interfaces";
-const prompt = require('prompt-sync')()
+import promptSync from 'prompt-sync';
+const prompt = promptSync();
 
 //add players at beginning of game
 let playerArray: Players[] = []
-const addPlayers = (numPlayers: number): Players[] => {
+export const addPlayers = (numPlayers: number): Players[] => {
     for (let i = 0; i < numPlayers; i++) {
         playerArray[i] = {
             name: '',
@@ -19,14 +20,12 @@ const addPlayers = (numPlayers: number): Players[] => {
             betOptions: ['$5', '$25', '$50', '$100', '$500', '$1000', 'All'],
             roundsWon: 0,
         };
-        
         let name = prompt(`Player ${i + 1}: Enter your name: `)
         name = name[0].toUpperCase() + name.slice(1).trim()
         playerArray[i].name = name
     }
     return playerArray;
 }
-module.exports = { addPlayers }
 
 
 

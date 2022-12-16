@@ -1,10 +1,10 @@
 import { Players } from "./interfaces"
-const print = require('./print')
+import { print } from "./print"
 
 const space = '--------------------------------------------------'
 
 // displays final stats when game is over
-function endGameResults(player: Players[], roundNum: number): void {
+export const endGameResults = (player: Players[], roundNum: number): void => {
     print('Game results:')
     print(space)
     print(`Total rounds played: ${roundNum}`)
@@ -22,4 +22,3 @@ function endGameResults(player: Players[], roundNum: number): void {
     }
 }
 
-module.exports = { endGameResults }

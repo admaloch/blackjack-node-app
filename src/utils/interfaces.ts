@@ -13,7 +13,7 @@ export interface Dealer {
     isBlackjack: Boolean;
 }
 
-export interface Players extends Dealer {
+export interface Players extends Dealer  {
     bank: number;
     bet: number;
     minBet: number;

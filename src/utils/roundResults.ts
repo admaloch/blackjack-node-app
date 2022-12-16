@@ -1,9 +1,9 @@
 
-const print = require('./print')
+import { print } from "./print"
 const space = '--------------------------------------------------'
 import { Players, Dealer } from "./interfaces"
 
-const roundResults = (player: Players, dealer: Dealer): Players => {
+export const roundResults = (player: Players, dealer: Dealer): Players => {
         //scenarios if player or dealer get blackjack
         if (player.isBlackjack && dealer.isBlackjack) {
             print(`${player.name}: Blackjack -- Push`)
@@ -45,4 +45,3 @@ const roundResults = (player: Players, dealer: Dealer): Players => {
     return player;
 }
 
-module.exports = { roundResults }

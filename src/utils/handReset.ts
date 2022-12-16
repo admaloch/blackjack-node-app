@@ -1,7 +1,7 @@
-import { Players } from "./interfaces"
+import { Players, Dealer } from "./interfaces"
 
 // resets hand info in playerHands array
-function handReset(player: Players):Players {
+export const handReset = (player: Players | Dealer): Players | Dealer => {
         player.hand = []
         player.handValues = []
         player.sum = 0
@@ -11,7 +11,3 @@ function handReset(player: Players):Players {
         }
         return player;
 }
-
-
-
-module.exports = { handReset }

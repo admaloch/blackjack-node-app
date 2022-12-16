@@ -1,9 +1,9 @@
 import { CardObj } from "./interfaces"
-let deck = require("./deck")
+import { deck } from "./deck";
 
 
 // subtract the cards that get delt from the deck
-const removeFromDeck = (cardNames:string[]):CardObj[] => {
+export const removeFromDeck = (cardNames:string[]):CardObj[] => {
     const updatedDeck: CardObj[] = deck;
     updatedDeck.forEach(a =>
         cardNames.forEach(b =>
@@ -11,4 +11,3 @@ const removeFromDeck = (cardNames:string[]):CardObj[] => {
     return updatedDeck
 }
 
-module.exports = { removeFromDeck } 
