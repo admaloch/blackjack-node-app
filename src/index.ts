@@ -12,8 +12,9 @@ import { removeFromDeck } from './utils/removeCards';
 import { roundResults } from './utils/roundResults';
 import { shuffle } from './utils/shuffle';
 import { isBankEmpty } from './utils/testBank';
-import { genCardNames, updatePlayerObj } from './utils/updatePlayer';
+import { genCardNames, updateDealerObj, updatePlayerObj } from './utils/updatePlayer';
 import { dealerObject } from './utils/dealer';
+
 
 import { Players } from "./utils/interfaces"
 import { YesOrNo, HitOrStay, QuitOrLeave } from "./utils/typeAlias"
@@ -139,8 +140,8 @@ while (isGameActive) {
         print(space)
         const emptyCards = testForEmptyCards(deck)
         const randomNums = genCards(2, emptyCards)
-        const cardNames = genCardNames(randomNums)
-        dealer = updatePlayerObj(randomNums, cardNames, dealer)
+        const cardNames = genCardNames(randomNums, deck)
+        dealer = updateDealerObj(randomNums, cardNames, deck, dealer)
         deck = removeFromDeck(cardNames)
         print(`The dealer's hand: ${hideDealerCards(dealer.hand)}`)
     }
@@ -150,8 +151,8 @@ while (isGameActive) {
             if (player[i].isPlayerActive === true) {
                 const emptyCards = testForEmptyCards(deck)
                 const randomNums = genCards(2, emptyCards)
-                const cardNames = genCardNames(randomNums)
-                player[i] = updatePlayerObj(randomNums, cardNames, player[i])
+                const cardNames = genCardNames(randomNums, deck)
+                player[i] = updatePlayerObj(randomNums, cardNames, deck, player[i])
                 deck = removeFromDeck(cardNames)
                 if (player[i].sum === 21) {
                     player[i].isBlackjack = true;
@@ -182,8 +183,8 @@ while (isGameActive) {
                         print(`Doubled bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
                         const emptyCards = testForEmptyCards(deck)
                         const randomNums = genCards(1, emptyCards)
-                        const cardNames = genCardNames(randomNums)
-                        player[i] = updatePlayerObj(randomNums, cardNames, player[i])
+                        const cardNames = genCardNames(randomNums, deck)
+                        player[i] = updatePlayerObj(randomNums, cardNames, deck, player[i])
                         player[i] = alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                         isDoubleUpValid = true;
@@ -215,8 +216,8 @@ while (isGameActive) {
                     if (hitOrStay === 'hit' || hitOrStay === 'h') {
                         const emptyCards = testForEmptyCards(deck)
                         const randomNums = genCards(1, emptyCards)
-                        const cardNames = genCardNames(randomNums)
-                        player[i] = updatePlayerObj(randomNums, cardNames, player[i])
+                        const cardNames = genCardNames(randomNums, deck)
+                        player[i] = updatePlayerObj(randomNums, cardNames, deck, player[i])
                         player[i] = alterAceValue(player[i])
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                     } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
@@ -253,8 +254,8 @@ while (isGameActive) {
             while (dealer.sum < 17) {
                 const emptyCards = testForEmptyCards(deck)
                 const randomNums = genCards(1, emptyCards)
-                const cardNames = genCardNames(randomNums)
-                dealer = updatePlayerObj(randomNums, cardNames, dealer)
+                const cardNames = genCardNames(randomNums, deck)
+                dealer = updateDealerObj(randomNums, cardNames, deck, dealer)
                 dealer = alterAceValue(dealer)
                 print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
             }
