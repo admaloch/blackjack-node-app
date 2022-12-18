@@ -26,6 +26,9 @@ let dealer = dealerObject;
 let initCardAmount = 0;
 let deck = mainDeck;
 
+const result = prompt('Hello')
+console.log(result)
+
 // Begin game
 const space = '--------------------------------------------------'
 print(space)
@@ -51,11 +54,13 @@ while (!isPlayerNumValid) {
     }
 }
 
+
+
 //asks players if ready to start 
 let isLeaveIntro = false;
 let isGameActive = false;
 while (!isLeaveIntro) {
-    let begin: YesOrNo | QuitOrLeave
+    let begin: string 
     print(space)
     if (numPlayers > 1) {
         begin = prompt(`Are all players ready to enter the table? (Yes or No) `).trim().toLowerCase()
@@ -128,7 +133,7 @@ while (isGameActive) {
                         } else {
                             print('--- Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
                         }
-                        player[i].bet = prompt('Please place a new bet -- ')
+                        betNotNum = prompt('Please place a new bet -- ')
                     }
                 }
             }
@@ -173,7 +178,7 @@ while (isGameActive) {
             print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
             // double up section
             if (player[i].bet <= player[i].bank) {
-                let doubleUp: YesOrNo = prompt("Double up? (Yes or No) ").trim().toLowerCase()
+                let doubleUp: string = prompt("Double up? (Yes or No) ").trim().toLowerCase()
                 let isDoubleUpValid = false
                 while (isDoubleUpValid === false) {
                     if (doubleUp === 'yes' || doubleUp === 'y') {

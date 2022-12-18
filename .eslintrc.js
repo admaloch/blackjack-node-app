@@ -8,8 +8,14 @@ module.exports = {
     "overrides": [
     ],
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        parser: '@typescript-eslint/parser'
     },
+    'plugins': [
+      'vue'
+    ],
     "rules": {
     }
 }
+

@@ -2,7 +2,12 @@ export type YesOrNo =
     'yes' |
     'y' |
     'no' |
-    'n';
+    'n'|
+    'quit' |
+    'q' |
+    'leave' |
+    'l' |
+    '';
 
 export type QuitOrLeave =
     'quit' |
