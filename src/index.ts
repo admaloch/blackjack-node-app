@@ -190,7 +190,8 @@ while (isGameActive) {
                         const randomNums = genCards(1, emptyCards)
                         const cardNames = genCardNames(randomNums, deck)
                         player[i] = updatePlayerObj(randomNums, cardNames, deck, player[i])
-                        player[i] = alterAceValue(player[i])
+                        player[i].handValues = alterAceValue(player[i])
+                        player[i].sum = player[i].handValues.reduce((p, c) => p + c)
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                         isDoubleUpValid = true;
                     } else if (doubleUp === 'no' || doubleUp === 'n') {
@@ -214,7 +215,7 @@ while (isGameActive) {
             }
             // hit or stay section
             if (playerCanHit === true) {
-                let hitOrStay: HitOrStay | QuitOrLeave = ''
+                let hitOrStay: string = ''
                 let playerIsDone = false
                 while (playerIsDone === false && player[i].sum < 21) {
                     hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
