@@ -1,23 +1,18 @@
-import promptSync from 'prompt-sync';
-import { print } from './utils/print';
-import { genCards, testForEmptyCards } from './utils/cardGen';
+import { addPlayers } from "./utils/addPlayers"
+import { changeBetOptions, setMinBet } from './utils/betOptions';
+import { dealCards, cardNamesArr, removeFromDeck } from './utils/cardGen';
+import { dealerObject } from './utils/dealer';
+import { mainDeck } from './utils/deck';
 import { endGameResults } from './utils/endResults';
 import { handReset } from './utils/handReset';
-import { mainDeck } from './utils/deck';
-import { changeBetOptions, setMinBet } from './utils/betOptions';
-import { addPlayers } from "./utils/addPlayers"
-import { alterAceValue } from './utils/alterAce';
 import { hideDealerCards } from './utils/hideDealer';
-import { removeFromDeck } from './utils/removeCards';
+import { Players } from "./utils/interfaces"
+import { print } from './utils/print';
 import { roundResults } from './utils/roundResults';
 import { shuffle } from './utils/shuffle';
 import { isBankEmpty } from './utils/testBank';
-import { genCardNames, updateDealerObj, updatePlayerObj } from './utils/updatePlayer';
-import { dealerObject } from './utils/dealer';
-
-
-import { Players } from "./utils/interfaces"
 import { YesOrNo, HitOrStay, QuitOrLeave } from "./utils/typeAlias"
+import promptSync from 'prompt-sync';
 
 const prompt = promptSync();
 let player: Players[] = []
@@ -25,9 +20,6 @@ let inactivePlayers: Players[] = []
 let dealer = dealerObject;
 let initCardAmount = 0;
 let deck = mainDeck;
-
-const result = prompt('Hello')
-console.log(result)
 
 // Begin game
 const space = '--------------------------------------------------'
@@ -54,13 +46,11 @@ while (!isPlayerNumValid) {
     }
 }
 
-
-
 //asks players if ready to start 
 let isLeaveIntro = false;
 let isGameActive = false;
 while (!isLeaveIntro) {
-    let begin: string 
+    let begin: string = ''
     print(space)
     if (numPlayers > 1) {
         begin = prompt(`Are all players ready to enter the table? (Yes or No) `).trim().toLowerCase()
@@ -133,7 +123,7 @@ while (isGameActive) {
                         } else {
                             print('--- Invalid input. Make sure your bet is a valid number and is a combination of the available chips')
                         }
-                        betNotNum = prompt('Please place a new bet -- ')
+                        player[i].bet = parseInt(prompt('Please place a new bet -- '))
                     }
                 }
             }
@@ -143,22 +133,16 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         print('Dealing cards:')
         print(space)
-        const emptyCards = testForEmptyCards(deck)
-        const randomNums = genCards(2, emptyCards)
-        const cardNames = genCardNames(randomNums, deck)
-        dealer = updateDealerObj(randomNums, cardNames, deck, dealer)
-        deck = removeFromDeck(cardNames)
+        dealer = dealCards(deck, dealer, 2)
+        deck = removeFromDeck(deck, cardNamesArr)
         print(`The dealer's hand: ${hideDealerCards(dealer.hand)}`)
     }
     //players draw 2 cards
     if (inactivePlayers.length !== numPlayers) {
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive === true) {
-                const emptyCards = testForEmptyCards(deck)
-                const randomNums = genCards(2, emptyCards)
-                const cardNames = genCardNames(randomNums, deck)
-                player[i] = updatePlayerObj(randomNums, cardNames, deck, player[i])
-                deck = removeFromDeck(cardNames)
+                player[i] = dealCards(deck, player[i], 2)
+                deck = removeFromDeck(deck, cardNamesArr)
                 if (player[i].sum === 21) {
                     player[i].isBlackjack = true;
                     print(`${player[i].name}'s hand: ${player[i].hand} -- Blackjack!`)
@@ -178,7 +162,7 @@ while (isGameActive) {
             print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
             // double up section
             if (player[i].bet <= player[i].bank) {
-                let doubleUp: string = prompt("Double up? (Yes or No) ").trim().toLowerCase()
+                let doubleUp: YesOrNo = prompt("Double up? (Yes or No) ").trim().toLowerCase()
                 let isDoubleUpValid = false
                 while (isDoubleUpValid === false) {
                     if (doubleUp === 'yes' || doubleUp === 'y') {
@@ -186,12 +170,8 @@ while (isGameActive) {
                         player[i].bank -= player[i].bet
                         player[i].bet = player[i].bet * 2
                         print(`Doubled bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
-                        const emptyCards = testForEmptyCards(deck)
-                        const randomNums = genCards(1, emptyCards)
-                        const cardNames = genCardNames(randomNums, deck)
-                        player[i] = updatePlayerObj(randomNums, cardNames, deck, player[i])
-                        player[i].handValues = alterAceValue(player[i])
-                        player[i].sum = player[i].handValues.reduce((p, c) => p + c)
+                        player[i] = dealCards(deck, player[i], 1)
+                        deck = removeFromDeck(deck, cardNamesArr)
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                         isDoubleUpValid = true;
                     } else if (doubleUp === 'no' || doubleUp === 'n') {
@@ -215,16 +195,13 @@ while (isGameActive) {
             }
             // hit or stay section
             if (playerCanHit === true) {
-                let hitOrStay: string = ''
+                let hitOrStay: HitOrStay | QuitOrLeave = ''
                 let playerIsDone = false
                 while (playerIsDone === false && player[i].sum < 21) {
                     hitOrStay = prompt('Hit or stay? ').trim().toLowerCase()
                     if (hitOrStay === 'hit' || hitOrStay === 'h') {
-                        const emptyCards = testForEmptyCards(deck)
-                        const randomNums = genCards(1, emptyCards)
-                        const cardNames = genCardNames(randomNums, deck)
-                        player[i] = updatePlayerObj(randomNums, cardNames, deck, player[i])
-                        player[i] = alterAceValue(player[i])
+                        player[i] = dealCards(deck, player[i], 1)
+                        deck = removeFromDeck(deck, cardNamesArr)
                         print(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`)
                     } else if (hitOrStay === 'quit' || hitOrStay === 'q') {
                         player.forEach(players => players.isPlayerActive = false)
@@ -258,11 +235,8 @@ while (isGameActive) {
             dealer.isBlackjack = true;
         } else {
             while (dealer.sum < 17) {
-                const emptyCards = testForEmptyCards(deck)
-                const randomNums = genCards(1, emptyCards)
-                const cardNames = genCardNames(randomNums, deck)
-                dealer = updateDealerObj(randomNums, cardNames, deck, dealer)
-                dealer = alterAceValue(dealer)
+                dealer = dealCards(deck, dealer, 1)
+                deck = removeFromDeck(deck, cardNamesArr)
                 print(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `)
             }
         } if (dealer.sum > 21) {
@@ -298,7 +272,6 @@ while (isGameActive) {
                 player[i] = handReset(player[i])
                 if (!player[i].isPlayerActive) inactivePlayers.push(player[i])
             }
-
         }
         dealer = handReset(dealer)
         deck = shuffle(deck, initCardAmount)
