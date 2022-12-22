@@ -3,22 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const prompt_sync_1 = __importDefault(require("prompt-sync"));
-const print_1 = require("./utils/print");
+const addPlayers_1 = require("./utils/addPlayers");
+const betOptions_1 = require("./utils/betOptions");
 const cardGen_1 = require("./utils/cardGen");
+const dealer_1 = require("./utils/dealer");
+const deck_1 = require("./utils/deck");
 const endResults_1 = require("./utils/endResults");
 const handReset_1 = require("./utils/handReset");
-const deck_1 = require("./utils/deck");
-const betOptions_1 = require("./utils/betOptions");
-const addPlayers_1 = require("./utils/addPlayers");
-const alterAce_1 = require("./utils/alterAce");
 const hideDealer_1 = require("./utils/hideDealer");
-const removeCards_1 = require("./utils/removeCards");
+const print_1 = require("./utils/print");
 const roundResults_1 = require("./utils/roundResults");
 const shuffle_1 = require("./utils/shuffle");
 const testBank_1 = require("./utils/testBank");
-const updatePlayer_1 = require("./utils/updatePlayer");
-const dealer_1 = require("./utils/dealer");
+const prompt_sync_1 = __importDefault(require("prompt-sync"));
 const prompt = (0, prompt_sync_1.default)();
 let player = [];
 let inactivePlayers = [];
@@ -54,7 +51,7 @@ while (!isPlayerNumValid) {
 let isLeaveIntro = false;
 let isGameActive = false;
 while (!isLeaveIntro) {
-    let begin;
+    let begin = '';
     (0, print_1.print)(space);
     if (numPlayers > 1) {
         begin = prompt(`Are all players ready to enter the table? (Yes or No) `).trim().toLowerCase();
@@ -120,6 +117,7 @@ while (isGameActive) {
                     }
                     else if (betNotNum === 'leave' || betNotNum === 'l') {
                         (0, print_1.print)(`${player[i].name} left the table.`);
+                        player[i].isPlayerActive = false;
                         inactivePlayers.push(player[i]);
                         isBetValid = true;
                         (0, print_1.print)(space);
@@ -137,7 +135,7 @@ while (isGameActive) {
                         else {
                             (0, print_1.print)('--- Invalid input. Make sure your bet is a valid number and is a combination of the available chips');
                         }
-                        player[i].bet = prompt('Please place a new bet -- ');
+                        betNotNum = prompt('Please place a new bet -- ');
                     }
                 }
             }
@@ -147,22 +145,16 @@ while (isGameActive) {
     if (inactivePlayers.length !== numPlayers) {
         (0, print_1.print)('Dealing cards:');
         (0, print_1.print)(space);
-        const emptyCards = (0, cardGen_1.testForEmptyCards)(deck);
-        const randomNums = (0, cardGen_1.genCards)(2, emptyCards);
-        const cardNames = (0, updatePlayer_1.genCardNames)(randomNums, deck);
-        dealer = (0, updatePlayer_1.updateDealerObj)(randomNums, cardNames, deck, dealer);
-        deck = (0, removeCards_1.removeFromDeck)(cardNames);
+        dealer = (0, cardGen_1.dealCards)(deck, dealer, 2);
+        deck = (0, cardGen_1.removeFromDeck)(deck, cardGen_1.cardNamesArr);
         (0, print_1.print)(`The dealer's hand: ${(0, hideDealer_1.hideDealerCards)(dealer.hand)}`);
     }
     //players draw 2 cards
     if (inactivePlayers.length !== numPlayers) {
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive === true) {
-                const emptyCards = (0, cardGen_1.testForEmptyCards)(deck);
-                const randomNums = (0, cardGen_1.genCards)(2, emptyCards);
-                const cardNames = (0, updatePlayer_1.genCardNames)(randomNums, deck);
-                player[i] = (0, updatePlayer_1.updatePlayerObj)(randomNums, cardNames, deck, player[i]);
-                deck = (0, removeCards_1.removeFromDeck)(cardNames);
+                player[i] = (0, cardGen_1.dealCards)(deck, player[i], 2);
+                deck = (0, cardGen_1.removeFromDeck)(deck, cardGen_1.cardNamesArr);
                 if (player[i].sum === 21) {
                     player[i].isBlackjack = true;
                     (0, print_1.print)(`${player[i].name}'s hand: ${player[i].hand} -- Blackjack!`);
@@ -191,11 +183,8 @@ while (isGameActive) {
                         player[i].bank -= player[i].bet;
                         player[i].bet = player[i].bet * 2;
                         (0, print_1.print)(`Doubled bet: $${player[i].bet} -- Current bank: $${player[i].bank}`);
-                        const emptyCards = (0, cardGen_1.testForEmptyCards)(deck);
-                        const randomNums = (0, cardGen_1.genCards)(1, emptyCards);
-                        const cardNames = (0, updatePlayer_1.genCardNames)(randomNums, deck);
-                        player[i] = (0, updatePlayer_1.updatePlayerObj)(randomNums, cardNames, deck, player[i]);
-                        player[i] = (0, alterAce_1.alterAceValue)(player[i]);
+                        player[i] = (0, cardGen_1.dealCards)(deck, player[i], 1);
+                        deck = (0, cardGen_1.removeFromDeck)(deck, cardGen_1.cardNamesArr);
                         (0, print_1.print)(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`);
                         isDoubleUpValid = true;
                     }
@@ -229,11 +218,8 @@ while (isGameActive) {
                 while (playerIsDone === false && player[i].sum < 21) {
                     hitOrStay = prompt('Hit or stay? ').trim().toLowerCase();
                     if (hitOrStay === 'hit' || hitOrStay === 'h') {
-                        const emptyCards = (0, cardGen_1.testForEmptyCards)(deck);
-                        const randomNums = (0, cardGen_1.genCards)(1, emptyCards);
-                        const cardNames = (0, updatePlayer_1.genCardNames)(randomNums, deck);
-                        player[i] = (0, updatePlayer_1.updatePlayerObj)(randomNums, cardNames, deck, player[i]);
-                        player[i] = (0, alterAce_1.alterAceValue)(player[i]);
+                        player[i] = (0, cardGen_1.dealCards)(deck, player[i], 1);
+                        deck = (0, cardGen_1.removeFromDeck)(deck, cardGen_1.cardNamesArr);
                         (0, print_1.print)(`You hit: ${player[i].hand} -- Total: ${player[i].sum}`);
                     }
                     else if (hitOrStay === 'quit' || hitOrStay === 'q') {
@@ -274,11 +260,8 @@ while (isGameActive) {
         }
         else {
             while (dealer.sum < 17) {
-                const emptyCards = (0, cardGen_1.testForEmptyCards)(deck);
-                const randomNums = (0, cardGen_1.genCards)(1, emptyCards);
-                const cardNames = (0, updatePlayer_1.genCardNames)(randomNums, deck);
-                dealer = (0, updatePlayer_1.updateDealerObj)(randomNums, cardNames, deck, dealer);
-                dealer = (0, alterAce_1.alterAceValue)(dealer);
+                dealer = (0, cardGen_1.dealCards)(deck, dealer, 1);
+                deck = (0, cardGen_1.removeFromDeck)(deck, cardGen_1.cardNamesArr);
                 (0, print_1.print)(`The dealer hit: ${dealer.hand} -- Total: ${dealer.sum} `);
             }
         }
@@ -320,6 +303,7 @@ while (isGameActive) {
         }
         dealer = (0, handReset_1.handReset)(dealer);
         deck = (0, shuffle_1.shuffle)(deck, initCardAmount);
+        (0, print_1.print)(space);
     }
     if (inactivePlayers.length === numPlayers) {
         (0, print_1.print)(space);
