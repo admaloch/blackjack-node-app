@@ -41,7 +41,7 @@ export const roundResults = (player: Players, dealer: Dealer): Players => {
         } else {
             print(`${player.name}'s sum: ${player.sum} -- The dealer won`)
         }
-    print(space)
+
     return player;
 }
 

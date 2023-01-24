@@ -2,6 +2,8 @@ import { Players } from "./interfaces";
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
 
+
+
 //add players at beginning of game
 let playerArray: Players[] = []
 export const addPlayers = (numPlayers: number): Players[] => {

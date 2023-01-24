@@ -1,3 +1,3 @@
-export const print = (str:string):void => {
+export const print = (str:any):void => {
     console.log(str)
 }
