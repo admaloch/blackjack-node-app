@@ -64,6 +64,7 @@ while (!isLeaveIntro) {
         (0, print_1.print)('Type leave anytime to leave the table or quit to end the game');
         (0, print_1.print)(space);
         (0, print_1.print)(`${dealer.name} has entered the table`);
+        (0, print_1.print)(space);
         for (let i = 0; i < player.length; i++) {
             (0, print_1.print)(`${player[i].name} has entered the table`);
             player[i].isPlayerActive = true;
@@ -116,6 +117,7 @@ while (isGameActive) {
                         isGameActive = false;
                     }
                     else if (betNotNum === 'leave' || betNotNum === 'l') {
+                        (0, print_1.print)(space);
                         (0, print_1.print)(`${player[i].name} left the table.`);
                         player[i].isPlayerActive = false;
                         inactivePlayers.push(player[i]);
@@ -123,6 +125,7 @@ while (isGameActive) {
                         (0, print_1.print)(space);
                     }
                     else {
+                        (0, print_1.print)(space);
                         if (player[i].minBet === 5 && player[i].bet < 5) {
                             (0, print_1.print)('--- Bet amount is too low. $5 is the minimum bid');
                         }
@@ -148,6 +151,7 @@ while (isGameActive) {
         dealer = (0, cardGen_1.dealCards)(deck, dealer, 2);
         deck = (0, cardGen_1.removeFromDeck)(deck, cardGen_1.cardNamesArr);
         (0, print_1.print)(`The dealer's hand: ${(0, hideDealer_1.hideDealerCards)(dealer.hand)}`);
+        (0, print_1.print)(space);
     }
     //players draw 2 cards
     if (inactivePlayers.length !== numPlayers) {
@@ -199,7 +203,9 @@ while (isGameActive) {
                         isGameActive = false;
                     }
                     else if (doubleUp === 'leave' || doubleUp === 'l') {
+                        (0, print_1.print)(space);
                         (0, print_1.print)(`${player[i].name} left the table.`);
+                        player[i].isPlayerActive = false;
                         inactivePlayers.push(player[i]);
                         isDoubleUpValid = true;
                     }
@@ -229,7 +235,9 @@ while (isGameActive) {
                         isGameActive = false;
                     }
                     else if (hitOrStay === 'leave' || hitOrStay === 'l') {
+                        (0, print_1.print)(space);
                         (0, print_1.print)(`${player[i].name} left the table.`);
+                        player[i].isPlayerActive = false;
                         inactivePlayers.push(player[i]);
                         playerIsDone = true;
                     }
@@ -293,7 +301,6 @@ while (isGameActive) {
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive) {
                 player[i] = (0, roundResults_1.roundResults)(player[i], dealer);
-                player[i].isPlayerActive = (0, testBank_1.isBankEmpty)(player[i]);
                 player[i].betOptions = (0, betOptions_1.changeBetOptions)(player[i]);
                 player[i].minBet = (0, betOptions_1.setMinBet)(player[i]);
                 player[i] = (0, handReset_1.handReset)(player[i]);
@@ -301,12 +308,17 @@ while (isGameActive) {
                     inactivePlayers.push(player[i]);
             }
         }
+        (0, print_1.print)(space);
+        for (let i = 0; i < player.length; i++) {
+            if (player[i].isPlayerActive) {
+                player[i].isPlayerActive = (0, testBank_1.isBankEmpty)(player[i]);
+            }
+        }
         dealer = (0, handReset_1.handReset)(dealer);
         deck = (0, shuffle_1.shuffle)(deck, initCardAmount);
         (0, print_1.print)(space);
     }
     if (inactivePlayers.length === numPlayers) {
-        (0, print_1.print)(space);
         (0, print_1.print)('All players have left the table');
         (0, print_1.print)(space);
         isGameActive = false;

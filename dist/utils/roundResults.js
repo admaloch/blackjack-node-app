@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.roundResults = void 0;
 const print_1 = require("./print");
-const space = '--------------------------------------------------';
 const roundResults = (player, dealer) => {
     //scenarios if player or dealer get blackjack
     if (player.isBlackjack && dealer.isBlackjack) {
