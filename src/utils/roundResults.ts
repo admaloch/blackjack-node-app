@@ -1,6 +1,5 @@
 
 import { print } from "./print"
-const space = '--------------------------------------------------'
 import { Players, Dealer } from "./interfaces"
 
 export const roundResults = (player: Players, dealer: Dealer): Players => {

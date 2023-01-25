@@ -7,7 +7,6 @@ import { Players } from "./interfaces"
 export const isBankEmpty = (player: Players): boolean => {
     if (player.bank < 5) {
         print(`${player.name} ran out of money and has left the table`)
-        print(space)
         return false;
     } else {
         return true;

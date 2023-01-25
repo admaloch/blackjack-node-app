@@ -61,6 +61,7 @@ while (!isLeaveIntro) {
         print('Type leave anytime to leave the table or quit to end the game');
         print(space)
         print(`${dealer.name} has entered the table`)
+        print(space)
         for (let i = 0; i < player.length; i++) {
             print(`${player[i].name} has entered the table`)
             player[i].isPlayerActive = true
@@ -79,6 +80,7 @@ while (!isLeaveIntro) {
         print('Invalid response. Respond with (Yes or No)')
     }
 }
+
 // begin game. 
 //game active until all players run out of money, leave the table, or someone quits.
 let roundNum = 0;
@@ -86,6 +88,7 @@ while (isGameActive) {
     roundNum++
     print(`Begin round ${roundNum}`)
     print(space)
+
     // bet section
     for (let i = 0; i < player.length; i++) {
         if (player[i].isPlayerActive === true) {
@@ -93,7 +96,6 @@ while (isGameActive) {
             print(`Current bank: $${player[i].bank} -- Minimum bet: $${player[i].minBet}`)
             let isBetValid = false
             let betNotNum: string = prompt(`Place your bet using any combination of the available chips (${player[i].betOptions}) `)
-            
             while (!isBetValid) {
                 player[i].bet = parseInt(betNotNum.replace(/\D/g, ""))
                 if (player[i].bet % 5 === 0 && player[i].bet >= player[i].minBet && player[i].bet <= player[i].bank || betNotNum === 'all') {
@@ -109,12 +111,14 @@ while (isGameActive) {
                         isBetValid = true;
                         isGameActive = false;
                     } else if (betNotNum === 'leave' || betNotNum === 'l') {
+                        print(space)
                         print(`${player[i].name} left the table.`)
                         player[i].isPlayerActive = false;
                         inactivePlayers.push(player[i])
                         isBetValid = true;
                         print(space)
                     } else {
+                        print(space)
                         if (player[i].minBet === 5 && player[i].bet < 5) {
                             print('--- Bet amount is too low. $5 is the minimum bid')
                         } else if (player[i].minBet > 5 && player[i].bet < player[i].minBet) {
@@ -138,7 +142,9 @@ while (isGameActive) {
         dealer = dealCards(deck, dealer, 2)
         deck = removeFromDeck(deck, cardNamesArr)
         print(`The dealer's hand: ${hideDealerCards(dealer.hand)}`)
+        print(space)
     }
+
     //players draw 2 cards
     if (inactivePlayers.length !== numPlayers) {
         for (let i = 0; i < player.length; i++) {
@@ -155,6 +161,7 @@ while (isGameActive) {
         }
         print(space)
     }
+
     //Player round section
     for (let i = 0; i < player.length; i++) {
         if (player[i].sum < 21 && player[i].isPlayerActive === true) {
@@ -162,6 +169,7 @@ while (isGameActive) {
             print(`${player[i].name}:`)
             print(`Hand: ${player[i].hand} -- Total: ${player[i].sum}`)
             print(`Current bet: $${player[i].bet} -- Current bank: $${player[i].bank}`)
+
             // double up section
             if (player[i].bet <= player[i].bank) {
                 let doubleUp: string = prompt("Double up? (Yes or No) ").trim().toLowerCase()
@@ -185,7 +193,9 @@ while (isGameActive) {
                         isDoubleUpValid = true;
                         isGameActive = false
                     } else if (doubleUp === 'leave' || doubleUp === 'l') {
+                        print(space)
                         print(`${player[i].name} left the table.`)
+                        player[i].isPlayerActive = false;
                         inactivePlayers.push(player[i])
                         isDoubleUpValid = true;
                     } else {
@@ -195,6 +205,7 @@ while (isGameActive) {
             } else {
                 playerCanHit = true
             }
+
             // hit or stay section
             if (playerCanHit === true) {
                 let hitOrStay: string = ''
@@ -211,7 +222,9 @@ while (isGameActive) {
                         playerIsDone = true
                         isGameActive = false
                     } else if (hitOrStay === 'leave' || hitOrStay === 'l') {
+                        print(space)
                         print(`${player[i].name} left the table.`)
+                        player[i].isPlayerActive = false;
                         inactivePlayers.push(player[i])
                         playerIsDone = true
                     } else if (hitOrStay === 'stay' || hitOrStay === 's') {
@@ -228,7 +241,6 @@ while (isGameActive) {
             print(space)
         }
     }
-  
 
     //dealer section
     if (inactivePlayers.length !== numPlayers) {
@@ -270,11 +282,16 @@ while (isGameActive) {
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive) {
                 player[i] = roundResults(player[i], dealer)
-                player[i].isPlayerActive = isBankEmpty(player[i])
                 player[i].betOptions = changeBetOptions(player[i])
                 player[i].minBet = setMinBet(player[i])
                 player[i] = handReset(player[i])
                 if (!player[i].isPlayerActive) inactivePlayers.push(player[i])
+            }
+        }
+        print(space)
+        for (let i = 0; i < player.length; i++) {
+            if (player[i].isPlayerActive) {
+                player[i].isPlayerActive = isBankEmpty(player[i])
             }
         }
         dealer = handReset(dealer)
@@ -283,7 +300,6 @@ while (isGameActive) {
     }
 
     if (inactivePlayers.length === numPlayers) {
-        print(space)
         print('All players have left the table')
         print(space)
         isGameActive = false;
