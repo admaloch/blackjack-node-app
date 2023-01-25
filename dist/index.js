@@ -311,7 +311,9 @@ while (isGameActive) {
         (0, print_1.print)(space);
         for (let i = 0; i < player.length; i++) {
             if (player[i].isPlayerActive) {
-                player[i].isPlayerActive = (0, testBank_1.isBankEmpty)(player[i]);
+                player[i] = (0, testBank_1.isBankEmpty)(player[i]);
+                if (!player[i].isPlayerActive)
+                    inactivePlayers.push(player[i]);
             }
         }
         dealer = (0, handReset_1.handReset)(dealer);

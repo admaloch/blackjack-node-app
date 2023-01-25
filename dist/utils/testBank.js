@@ -7,10 +7,8 @@ const space = '--------------------------------------------------';
 const isBankEmpty = (player) => {
     if (player.bank < 5) {
         (0, print_1.print)(`${player.name} ran out of money and has left the table`);
-        return false;
+        player.isPlayerActive = false;
     }
-    else {
-        return true;
-    }
+    return player;
 };
 exports.isBankEmpty = isBankEmpty;
