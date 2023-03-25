@@ -10,7 +10,10 @@ Download app and install in a location of your choosing.
 Open the Blackjack-main folder, click on the dist folder and locate the file titled index.js. 
 Open the command line on your computer (Terminal on Mac - Command Prompt on Windows)
 In the command line: type node then drag the index.js file and drop into the command line (this contains the absolute file path)
-It should look something like this: yourname@yourname-MacBook-Air ~ % node /Users/yourname/Desktop/blackjack-main/dist/index.js 
+It should look something like this: 
+
+yourname@yourname-MacBook-Air ~ % node /Users/yourname/Desktop/blackjack-main/dist/index.js 
+
 Click enter to begin the game and follow instructions.
 
 
