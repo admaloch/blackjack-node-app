@@ -1,6 +1,6 @@
 # blackjack
 
-This is a command line blackjack game written in Typescript and powered by Node js. The intent of this project was to strengthen my understanding of the core computer science fundamentals like working with conditionals, arrays, objects, storing and passing around data, debugging etc.. It was also an opportunity to work within the node ecosystem and refine my Typescript skills.
+This is a command line blackjack game written in Typescript and powered by Node js. The intent of this project was to strengthen my understanding of the core fundamentals like working with conditionals, arrays, objects, storing and passing around data, debugging etc.. It was also an opportunity to work within the node ecosystem and refine my Typescript skills.
 
 Note:
 
