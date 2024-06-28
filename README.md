@@ -1,7 +1,7 @@
 # Command line blackjack game
 
 <h2>About</h2>
-<p> This is a command-line blackjack game built in TypeScript and powered by Node.js. The primary aim was to enhance
+<p> This is a command-line blackjack game built with TypeScript and powered by Node.js. The primary aim was to enhance
 my grasp of core JavaScript fundamentals and delve into more intricate logic. Additionally, it provided an
 opportunity to immerse myself in the Node ecosystem and refine my TypeScript skills. The game faithfully mirrors
 a real Blackjack game, allowing multiple players and adhering to standard rules and procedures—minus the
